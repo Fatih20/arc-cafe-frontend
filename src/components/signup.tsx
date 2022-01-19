@@ -1,25 +1,32 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { login, register } from '../utils/api';
+import { register } from '../utils/api';
 
 const Main = styled.div``;
 
-function LogIn() {
+function SignUp() {
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
-    login(email, password)
-      .then(() => navigate('/arc-cafe-frontend'))
-      .catch((err) => {
-        console.log(err);
-      });
+
+    register(name, email, password).then(() => {
+      navigate('/arc-cafe-frontend/login');
+    });
   };
   return (
     <Main>
       <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          name="name"
+          placeholder="Name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
         <input
           type="email"
           name="email"
@@ -40,4 +47,4 @@ function LogIn() {
   );
 }
 
-export default LogIn;
+export default SignUp;

@@ -27,7 +27,7 @@ function Header() {
                 <a href="#Location">Location</a>
                 <a href="#Store">Store</a>
                 <Link to="/arc-cafe-frontend/login">Login</Link>
-                <Link to="/arc-cafe-frontend/signin">Signin</Link>
+                <Link to="/arc-cafe-frontend/signup">Signup</Link>
             </Navigation>        
 
             </Main>
