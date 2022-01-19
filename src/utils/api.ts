@@ -18,3 +18,9 @@ export async function login(email: string, password: string) {
     .post(BASE_URL + '/auth/login', { email, password }, OPTIONS)
     .then((res) => res.data);
 }
+
+export async function logout() {
+    return await axios
+      .post(BASE_URL + '/auth/logout', { }, OPTIONS)
+      .then((res) => res.data);
+  }
