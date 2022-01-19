@@ -21,7 +21,6 @@ function Header() {
                 <a href="#About">About</a>
                 <a href="#Location">Location</a>
                 <a href="#Store">Store</a>
-                <a href="#Footer">About</a>
             </Navigation>        
 
             </Main>
