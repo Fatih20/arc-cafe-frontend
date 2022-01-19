@@ -1,6 +1,13 @@
+import styled from "styled-components";
+
+const Main = styled.div`
+    background-color: white;
+    height: 100px;
+`;
+
 function Footer() {
     return (
-        <h1>Hello</h1>
+        <Main id="Footer" />
     );
 }
 
