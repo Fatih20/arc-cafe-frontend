@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/arc-cafe-frontend/static/css/main.fc4f193c.css",
-    "main.js": "/arc-cafe-frontend/static/js/main.34c6d145.js",
+    "main.css": "/arc-cafe-frontend/static/css/main.f2a0d5e5.css",
+    "main.js": "/arc-cafe-frontend/static/js/main.3090e4cb.js",
     "index.html": "/arc-cafe-frontend/index.html",
-    "main.fc4f193c.css.map": "/arc-cafe-frontend/static/css/main.fc4f193c.css.map",
-    "main.34c6d145.js.map": "/arc-cafe-frontend/static/js/main.34c6d145.js.map"
+    "main.f2a0d5e5.css.map": "/arc-cafe-frontend/static/css/main.f2a0d5e5.css.map",
+    "main.3090e4cb.js.map": "/arc-cafe-frontend/static/js/main.3090e4cb.js.map"
   },
   "entrypoints": [
-    "static/css/main.fc4f193c.css",
-    "static/js/main.34c6d145.js"
+    "static/css/main.f2a0d5e5.css",
+    "static/js/main.3090e4cb.js"
   ]
 }
