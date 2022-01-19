@@ -1,5 +1,8 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+
 import Home from '../components/main';
+import SignIn from '../components/signin';
+import LogIn from '../components/login';
 
 function AppRoutes() {
   return (
@@ -7,7 +10,9 @@ function AppRoutes() {
       <Routes>
         <Route path="/arc-cafe-frontend">
           <Route index element={<Home />} />
-        </Route>
+          <Route path="signin" element={<SignIn />} />
+          <Route path="login" element={<LogIn />} />
+        </Route> 
       </Routes>
     </BrowserRouter>
   );

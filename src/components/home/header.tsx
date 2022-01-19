@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 
 const Main = styled.div`
     align-items: center;
@@ -25,6 +26,8 @@ function Header() {
                 <a href="#About">About</a>
                 <a href="#Location">Location</a>
                 <a href="#Store">Store</a>
+                <Link to="/arc-cafe-frontend/login">Login</Link>
+                <Link to="/arc-cafe-frontend/signin">Signin</Link>
             </Navigation>        
 
             </Main>
