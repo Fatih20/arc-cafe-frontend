@@ -7,7 +7,7 @@ const Main = styled.div`
 
 function Promotional() {
     return (
-        <Main />
+        <Main id="Promotional"/>
     )
 }
 

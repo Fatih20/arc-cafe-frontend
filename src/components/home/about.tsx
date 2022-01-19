@@ -1,6 +1,13 @@
+import styled from "styled-components";
+
+const Main = styled.div`
+    background-color: yellow;
+    height: 200px;
+`;
+
 function About() {
     return (
-        <h1>Hello</h1>
+        <Main id="About" />
     );
 }
 

@@ -18,9 +18,10 @@ function Header() {
         <Main>
             <h1>Coffee Hour</h1>
             <Navigation>
+                <a href="#About">About</a>
+                <a href="#Location">Location</a>
+                <a href="#Store">Store</a>
                 <a href="#Footer">About</a>
-                <a href="">Store</a>
-                <a href="">Menu</a>
             </Navigation>        
 
             </Main>
