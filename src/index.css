@@ -4,7 +4,7 @@
 
 @layer base {
   * {
-    @apply font-['Inter', sans-serif];
+    font-family: 'Inter', sans-serif;
   }
 
   h1, h2 {
