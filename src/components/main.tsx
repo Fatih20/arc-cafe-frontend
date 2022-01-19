@@ -13,7 +13,6 @@ function Main() {
     if (error) {
         navigate("/arc-cafe-frontend/login")
     }
-    console.log(user)
     return (
         <>
             <Header />

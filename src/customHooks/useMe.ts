@@ -5,7 +5,7 @@ import { BASE_URL, OPTIONS } from '../utils/api';
 
 export default function useMe() {
   const { data, isLoading, error } = useQuery('me', () =>
-    axios.get(BASE_URL + '/auth/me', OPTIONS)
+    axios.get(BASE_URL + '/auth/me', OPTIONS).then((res) => res.data)
   );
 
   return {
