@@ -13,10 +13,14 @@ const Navigation = styled.div`
     gap: 1rem;
 `;
 
+const Title = styled.h1`
+    
+`;
+
 function Header() {
     return (
         <Main>
-            <h1>Coffee Hour</h1>
+            <Title>Coffee Hour</Title>
             <Navigation>
                 <a href="#About">About</a>
                 <a href="#Location">Location</a>
