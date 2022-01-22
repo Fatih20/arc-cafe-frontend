@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { logout } from '../../utils/api';
+import { useQueryClient, useMutation } from 'react-query';
 
 const Main = styled.div`
   align-items: center;
@@ -22,10 +23,16 @@ const LogSignWrapper = styled.div`
 `;
 
 function Header({ isLoggedIn }: { isLoggedIn: boolean }) {
-  function handleLogout() {
-    console.log('Is Logging Out');
-    logout();
+  const queryClient = useQueryClient();
+
+  const { mutateAsync: logoutAndRefetch } = useMutation(logout, {
+    onSuccess: () => queryClient.invalidateQueries('me'),
+  });
+
+  async function handleLogout() {
+    logoutAndRefetch();
   }
+
   return (
     <Main>
       <Title>Coffee Hour</Title>

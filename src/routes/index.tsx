@@ -5,6 +5,8 @@ import SignIn from '../components/signup';
 import LogIn from '../components/login';
 import Store from '../components/store';
 
+import { logout } from '../utils/api';
+
 function AppRoutes() {
   return (
     <BrowserRouter>
