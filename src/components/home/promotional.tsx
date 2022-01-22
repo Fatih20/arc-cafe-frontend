@@ -5,22 +5,17 @@ import coffeeImage from '../../assets/header-cropped.png';
 import coffeeHour from '../../assets/coffeehour.png';
 
 const Main = styled.div`
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
+  align-items: center;
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: 5fr 5fr;
+  grid-template-rows: 30% 60% 10%;
+  justify-items: center;
   position: relative;
   height: 92.5vh;
-  padding: 1rem;
-`;
+  padding: 2rem 1rem 1rem 1rem;
 
-const MainWrapper = styled.div`
-  flex-wrap: wrap;
-  flex-direction: row;
-  height: calc(92.5vh - 10vh);
-  @media (min-width: 425px) {
-    flex-direction: row;
-  }
+  /* border: solid 1px black; */
 `;
 
 const BackgroundImageMask = styled.div`
@@ -42,86 +37,86 @@ const BackgroundImageMask = styled.div`
   top: 0;
   width: 100%;
   z-index: -1;
-  border: solid 1px black;
-`;
-
-const BackgroundImage = styled.img`
-  -webkit-filter: blur(2px);
-  filter: blur(2px);
-  /* filter: grayscale(100%); */
-  filter: saturate(0%);
-  height: 100%;
-  opacity: 0.4;
-  z-index: -1;
-  width: max-content;
+  /* border: solid 1px black; */
 `;
 
 const TextContainer = styled.div`
-  align-self: center;
+  align-self: start;
   align-items: center;
   display: flex;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   flex-direction: column;
+  grid-column: 1/3;
+  grid-row: 1;
   margin-bottom: 2rem;
-  width: 50%;
+  text-align: center;
 
-  @media (min-width: 425px) {
-    align-items: flex-start;
+  @media (min-width: 600px) {
+    align-items: start;
+    font-size: 1.25rem;
+    grid-column: 1;
+    grid-row: 1/3;
     text-align: left;
-    width: 50%;
   }
-
-  border: solid 1px black;
+  /* border: solid 1px black; */
 `;
 
 const Title = styled.h2`
-  font-size: 1.25em;
+  font-size: 1.5em;
   font-weight: 700;
 `;
 
 const BiggerTitle = styled.h2`
   color: #8c7466;
-  font-size: 2em;
+  font-size: 2.25em;
   font-weight: 800;
 `;
 
 const SmallParagraph = styled.p`
-  font-size: 0.8em;
+  font-size: 1em;
 `;
 
 const ViewMenu = styled.button`
   background-color: #95c79d;
   border-radius: 1.5rem;
   color: white;
-  font-size: 1rem;
+  font-size: 1em;
   font-weight: 900;
-  margin: 1rem 0 0 0;
+  margin: 0.5rem 0 0 0;
   padding: 0.3rem 0.75rem;
   width: auto;
 `;
 
 const CoffeeImage = styled.img`
-  align-self: flex-start;
   aspect-ratio: initial;
+  grid-column: 1/3;
+  grid-row: 2;
+  height: auto;
+  max-height: 100%;
+  width: auto;
 
-  @media (min-width: 425px) {
-    max-width: 50%;
-    height: auto;
-    max-height: 40rem;
+  @media (min-width: 600px) {
+    grid-column: 2;
+    grid-row: 1/3;
   }
+
+  /* border: solid 1px black; */
 `;
 
 const LogoContainer = styled.div`
   align-items: center;
   display: flex;
   flex-direction: column;
-  height: 10vh;
+  font-size: 0.8rem;
+  height: 100%;
   gap: 0.5rem;
+  grid-column: 1/3;
+  grid-row: 3;
 
   & p {
+    font-size: 1.5em;
     color: #8c7466;
   }
-
   /* border: solid 1px black; */
 `;
 
@@ -134,17 +129,16 @@ function Promotional() {
   return (
     <Main>
       <BackgroundImageMask />
-      <MainWrapper>
-        <TextContainer>
-          <Title>GOOD DAYS START WITH A</Title>
-          <BiggerTitle>GOOD COFFEE</BiggerTitle>
-          <SmallParagraph>
-            A cup of coffee lasts only a moment, but it is that moment that
-            makes your day better.
-          </SmallParagraph>
-          <ViewMenu>VIEW MENU</ViewMenu>
-        </TextContainer>
-      </MainWrapper>
+      <TextContainer>
+        <Title>GOOD DAYS START WITH A</Title>
+        <BiggerTitle>GOOD COFFEE</BiggerTitle>
+        <SmallParagraph>
+          A cup of coffee lasts only a moment, but it is that moment that makes
+          your day better.
+        </SmallParagraph>
+        <ViewMenu>VIEW MENU</ViewMenu>
+      </TextContainer>
+      <CoffeeImage src={coffeeImage} />
       <LogoContainer>
         <CoffeeLogo src={coffeeHour} />
         <p>COFFEE HOUR</p>
