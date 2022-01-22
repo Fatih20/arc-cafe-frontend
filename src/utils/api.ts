@@ -9,18 +9,18 @@ export const OPTIONS = {
 
 export async function register(name: string, email: string, password: string) {
   return await axios
-    .post(BASE_URL + '/auth/register', { name, email, password }, OPTIONS)
+    .post(BASE_URL + 'auth/register', { name, email, password }, OPTIONS)
     .then((res) => res.data);
 }
 
 export async function login(email: string, password: string) {
   return await axios
-    .post(BASE_URL + '/auth/login', { email, password }, OPTIONS)
+    .post(BASE_URL + 'auth/login', { email, password }, OPTIONS)
     .then((res) => res.data);
 }
 
 export async function logout() {
     return await axios
-      .post(BASE_URL + '/auth/logout', { }, OPTIONS)
+      .post(BASE_URL + 'auth/logout', { }, OPTIONS)
       .then((res) => res.data);
 }
