@@ -2,6 +2,7 @@ import styled from 'styled-components';
 
 import promotionalBackground from '../../assets/header-bg.jpg';
 import coffeeImage from '../../assets/header-cropped.png';
+import coffeeHour from '../../assets/coffeehour.png';
 
 const Main = styled.div`
   text-align: center;
@@ -13,8 +14,22 @@ const Main = styled.div`
   padding: 1rem;
 `;
 
+const MainWrapper = styled.div`
+  flex-wrap: wrap;
+  flex-direction: column;
+  height: calc(92.5vh - 10vh);
+  @media (min-width: 425px) {
+    flex-direction: row;
+  }
+`;
+
 const BackgroundImageMask = styled.div`
+  -webkit-filter: blur(2px);
   -webkit-mask-image: linear-gradient(black, transparent);
+  background-image: url(${process.env.PUBLIC_URL + '/header-bg.jpg'});
+  background-position: center;
+  background-size: cover;
+  filter: blur(2px);
   mask-image: linear-gradient(
     rgba(0, 0, 0, 0.6),
     rgba(0, 0, 0, 0.6),
@@ -22,9 +37,12 @@ const BackgroundImageMask = styled.div`
   );
   height: 100%;
   left: 0;
+  opacity: 0.4;
   position: absolute;
   top: 0;
+  width: 100%;
   z-index: -1;
+  border: solid 1px black;
 `;
 
 const BackgroundImage = styled.img`
@@ -34,14 +52,21 @@ const BackgroundImage = styled.img`
   filter: saturate(0%);
   height: 100%;
   opacity: 0.4;
-  /* width: auto; */
   z-index: -1;
+  width: max-content;
 `;
 
 const TextContainer = styled.div`
   display: flex;
   flex-direction: column;
   margin-bottom: 2rem;
+
+  @media (min-width: 425px) {
+    align-items: flex-start;
+    justify-content: flex-start;
+    text-align: left;
+    width: 50%;
+  }
 `;
 
 const Title = styled.h2`
@@ -71,27 +96,57 @@ const ViewMenu = styled.button`
 `;
 
 const CoffeeImage = styled.img`
+  align-self: flex-start;
   aspect-ratio: initial;
-  max-height: 60vh;
-  /* width: auto; */
+
+  @media (min-width: 425px) {
+    max-width: 50%;
+    height: auto;
+    max-height: 40rem;
+  }
+`;
+
+const LogoContainer = styled.div`
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  height: 10vh;
+  gap: 0.5rem;
+
+  & p {
+    color: #8c7466;
+  }
+
+  /* border: solid 1px black; */
+`;
+
+const CoffeeLogo = styled.img`
+  height: 50%;
+  width: fit-content;
 `;
 
 function Promotional() {
   return (
     <Main>
-      <BackgroundImageMask>
-        <BackgroundImage src={promotionalBackground} />
-      </BackgroundImageMask>
-      <TextContainer>
-        <Title>GOOD DAYS START WITH A</Title>
-        <BiggerTitle>GOOD COFFEE</BiggerTitle>
-        <SmallParagraph>
-          A cup of coffee lasts only a moment, but it is that moment that makes
-          your day better.
-        </SmallParagraph>
-        <ViewMenu>VIEW MENU</ViewMenu>
-      </TextContainer>
-      <CoffeeImage src={coffeeImage} />
+      <MainWrapper>
+        <BackgroundImageMask>
+          {/* <BackgroundImage src={promotionalBackground} /> */}
+          {/* <CoffeeImage src={coffeeImage} /> */}
+        </BackgroundImageMask>
+        <TextContainer>
+          <Title>GOOD DAYS START WITH A</Title>
+          <BiggerTitle>GOOD COFFEE</BiggerTitle>
+          <SmallParagraph>
+            A cup of coffee lasts only a moment, but it is that moment that
+            makes your day better.
+          </SmallParagraph>
+          <ViewMenu>VIEW MENU</ViewMenu>
+        </TextContainer>
+      </MainWrapper>
+      <LogoContainer>
+        <CoffeeLogo src={coffeeHour} />
+        <p>COFFEE HOUR</p>
+      </LogoContainer>
     </Main>
   );
 }
