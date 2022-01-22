@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { logout } from '../../utils/api';
 import { useQueryClient, useMutation } from 'react-query';
+import { useIsLoggedIn } from '../../context/isLoggedIn';
 
 const Main = styled.div`
   align-items: center;
@@ -22,8 +23,9 @@ const LogSignWrapper = styled.div`
   display: ${({ show }: { show: boolean }) => (show ? 'initial' : 'none')};
 `;
 
-function Header({ isLoggedIn }: { isLoggedIn: boolean }) {
+function Header() {
   const queryClient = useQueryClient();
+  const isLoggedIn = useIsLoggedIn();
 
   const { mutateAsync: logoutAndRefetch } = useMutation(logout, {
     onSuccess: () => queryClient.invalidateQueries('me'),
@@ -41,10 +43,10 @@ function Header({ isLoggedIn }: { isLoggedIn: boolean }) {
         <a href="#Location">Location</a>
         <a href="#Store">Store</a>
         <LogSignWrapper show={!isLoggedIn}>
-          <Link to="/arc-cafe-frontend/login">Login</Link>
+          <Link to="/arc-cafe/login">Login</Link>
         </LogSignWrapper>
         <LogSignWrapper show={!isLoggedIn}>
-          <Link to="/arc-cafe-frontend/signup">Signup</Link>
+          <Link to="/arc-cafe/signup">Signup</Link>
         </LogSignWrapper>
         <LogSignWrapper show={isLoggedIn}>
           <button onClick={handleLogout}>Log Out</button>
