@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { logout } from '../../utils/api';
 import { useQueryClient, useMutation } from 'react-query';
-// import { useIsLoggedIn } from '../../context/isLoggedIn';
+import { useIsLoggedIn } from '../../context/isLoggedIn';
 
 import blackLogo from '../../assets/coffeehour_black.png';
 import cartLogo from '../../assets/shopping-bag-cropped.png';
@@ -41,7 +41,7 @@ const NavigationButton = styled.a`
 
 function Header() {
   const queryClient = useQueryClient();
-  // const isLoggedIn = useIsLoggedIn();
+  const isLoggedIn = useIsLoggedIn();
   const navigate = useNavigate();
 
   const { mutateAsync: logoutAndRefetch } = useMutation(logout, {
@@ -56,9 +56,13 @@ function Header() {
     navigate('/arc-cafe/');
   }
 
+  function navigateToMenu() {
+    navigate('/arc-cafe/menu');
+  }
+
   return (
     <Main>
-      <LogoButton onClick={() => navigate('/arc-cafe/')}>
+      <LogoButton onClick={navigateToHome}>
         <HeaderLogo src={blackLogo} />
       </LogoButton>
       <Navigation>
@@ -68,11 +72,15 @@ function Header() {
         <NavigationButton onClick={navigateToHome} href="#Store">
           STORE
         </NavigationButton>
-        <NavigationButton onClick={() => navigate('/arc-cafe/menu')} href="#">
+        <NavigationButton onClick={navigateToMenu} href="#">
           MENU
         </NavigationButton>
       </Navigation>
-      <LogoButton onClick={() => navigate('/arc-cafe/menu')}>
+      <LogoButton
+        onClick={
+          isLoggedIn ? navigateToMenu : () => navigate('/arc-cafe/signup')
+        }
+      >
         <HeaderLogo src={cartLogo} />
       </LogoButton>
     </Main>
