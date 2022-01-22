@@ -14,7 +14,7 @@ function SignUp() {
     e.preventDefault();
 
     register(name, email, password).then(() => {
-      navigate('/arc-cafe-frontend/login');
+      navigate('/arc-cafe-frontend');
     });
   };
   return (
