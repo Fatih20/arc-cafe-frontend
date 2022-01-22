@@ -16,7 +16,7 @@ const Main = styled.div`
 
 const MainWrapper = styled.div`
   flex-wrap: wrap;
-  flex-direction: column;
+  flex-direction: row;
   height: calc(92.5vh - 10vh);
   @media (min-width: 425px) {
     flex-direction: row;
@@ -57,35 +57,39 @@ const BackgroundImage = styled.img`
 `;
 
 const TextContainer = styled.div`
+  align-self: center;
+  align-items: center;
   display: flex;
+  font-size: 0.8rem;
   flex-direction: column;
   margin-bottom: 2rem;
+  width: 50%;
 
   @media (min-width: 425px) {
     align-items: flex-start;
-    justify-content: flex-start;
     text-align: left;
     width: 50%;
   }
+
+  border: solid 1px black;
 `;
 
 const Title = styled.h2`
-  font-size: 1.25rem;
+  font-size: 1.25em;
   font-weight: 700;
 `;
 
 const BiggerTitle = styled.h2`
   color: #8c7466;
-  font-size: 2rem;
+  font-size: 2em;
   font-weight: 800;
 `;
 
 const SmallParagraph = styled.p`
-  font-size: 0.8rem;
+  font-size: 0.8em;
 `;
 
 const ViewMenu = styled.button`
-  align-self: center;
   background-color: #95c79d;
   border-radius: 1.5rem;
   color: white;
@@ -93,6 +97,7 @@ const ViewMenu = styled.button`
   font-weight: 900;
   margin: 1rem 0 0 0;
   padding: 0.3rem 0.75rem;
+  width: auto;
 `;
 
 const CoffeeImage = styled.img`
@@ -128,11 +133,8 @@ const CoffeeLogo = styled.img`
 function Promotional() {
   return (
     <Main>
+      <BackgroundImageMask />
       <MainWrapper>
-        <BackgroundImageMask>
-          {/* <BackgroundImage src={promotionalBackground} /> */}
-          {/* <CoffeeImage src={coffeeImage} /> */}
-        </BackgroundImageMask>
         <TextContainer>
           <Title>GOOD DAYS START WITH A</Title>
           <BiggerTitle>GOOD COFFEE</BiggerTitle>
