@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export const BASE_URL = 'https://arc-cafe.herokuapp.com/api';
+export const BASE_URL = 'https://arc.arsaizdihar.me/api/';
 
 export const OPTIONS = {
   headers: { 'Content-Type': 'application/json' },
@@ -23,4 +23,4 @@ export async function logout() {
     return await axios
       .post(BASE_URL + '/auth/logout', { }, OPTIONS)
       .then((res) => res.data);
-  }
+}
