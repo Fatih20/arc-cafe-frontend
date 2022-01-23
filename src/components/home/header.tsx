@@ -55,11 +55,11 @@ function Header() {
   }
 
   function navigateToHome() {
-    navigate(`${BASE_URL}`);
+    navigate(`${BASE_URL}/`);
   }
 
   function navigateToMenu() {
-    navigate('${BASE_URL}/menu');
+    navigate(`${BASE_URL}/menu`);
   }
 
   return (
