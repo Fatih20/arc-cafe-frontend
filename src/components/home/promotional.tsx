@@ -122,7 +122,7 @@ const LogoContainer = styled.div`
 
 const CoffeeLogo = styled.img`
   height: 50%;
-  width: fit-content;
+  width: auto;
 `;
 
 function Promotional() {
