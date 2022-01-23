@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { register } from '../utils/api';
 
 import coffeeHour from '../assets/coffeehour.png';
+import { BASE_URL } from '../routes';
 
 const Main = styled.div`
   align-items: center;
@@ -90,7 +91,7 @@ function SignUp() {
     e.preventDefault();
 
     register(name, email, password).then(() => {
-      navigate('/');
+      navigate(`${BASE_URL}`);
     });
   };
   return (
@@ -128,7 +129,9 @@ function SignUp() {
           </StyledForm>
           <SignInOption>
             Already have an account?{' '}
-            <SignInLink onClick={() => navigate('/login')}>Sign in</SignInLink>
+            <SignInLink onClick={() => navigate(`${BASE_URL}/login`)}>
+              Sign in
+            </SignInLink>
           </SignInOption>
         </FormContainer>
       </Main>

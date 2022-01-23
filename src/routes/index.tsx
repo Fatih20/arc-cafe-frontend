@@ -6,11 +6,13 @@ import LogIn from '../components/login';
 import Menu from '../components/menu';
 import HeaderFooter from '../components/headerfooter';
 
+export const BASE_URL = '/arc-cafe-frontend';
+
 function AppRoutes() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/">
+        <Route path="/arc-cafe-frontend">
           <Route
             index
             element={

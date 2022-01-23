@@ -7,6 +7,8 @@ import { useIsLoggedIn } from '../../context/isLoggedIn';
 import blackLogo from '../../assets/coffeehour_black.png';
 import cartLogo from '../../assets/shopping-bag-cropped.png';
 
+import { BASE_URL } from '../../routes';
+
 const Main = styled.div`
   align-items: center;
   background-color: #8c7466;
@@ -53,11 +55,11 @@ function Header() {
   }
 
   function navigateToHome() {
-    navigate('/');
+    navigate(`${BASE_URL}`);
   }
 
   function navigateToMenu() {
-    navigate('/menu');
+    navigate('${BASE_URL}/menu');
   }
 
   return (
@@ -77,7 +79,9 @@ function Header() {
         </NavigationButton>
       </Navigation>
       <LogoButton
-        onClick={isLoggedIn ? navigateToMenu : () => navigate('/signup')}
+        onClick={
+          isLoggedIn ? navigateToMenu : () => navigate(`${BASE_URL}/signup`)
+        }
       >
         <HeaderLogo src={cartLogo} />
       </LogoButton>

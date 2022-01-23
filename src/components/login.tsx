@@ -5,6 +5,8 @@ import { login, register } from '../utils/api';
 
 import coffeeHour from '../assets/coffeehour.png';
 
+import { BASE_URL } from '../utils/api';
+
 const Main = styled.div`
   align-items: center;
   display: flex;
@@ -88,7 +90,7 @@ function LogIn() {
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
     login(email, password)
-      .then(() => navigate('/'))
+      .then(() => navigate(`${BASE_URL}`))
       .catch((err) => {
         console.log(err);
       });
