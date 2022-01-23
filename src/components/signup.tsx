@@ -79,6 +79,7 @@ const SignInOption = styled.p`
 `;
 
 const SignInLink = styled.a`
+  cursor: pointer;
   color: #95c79d;
 `;
 
