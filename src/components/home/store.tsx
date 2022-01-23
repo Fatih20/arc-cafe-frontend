@@ -13,7 +13,7 @@ const Main = styled.div`
   display: flex;
   flex-direction: column;
   gap: 2rem;
-  padding: 0.5rem min(2rem, 5%);
+  padding: 5rem min(2rem, 5%);
 
   @media (min-width: 600px) {
     display: grid;
@@ -21,6 +21,10 @@ const Main = styled.div`
     grid-template-rows: repeat(4, 1fr);
     column-gap: 1rem;
     row-gap: 1rem;
+
+    @media (min-width: 900px) {
+      padding-top: 10rem;
+    }
   }
 `;
 
