@@ -12,8 +12,6 @@ interface IStoreImagesProps {
 const Main = styled.div`
   display: flex;
   flex-direction: column;
-  /* grid-template-columns: 1fr;
-  grid-template-rows: repeat(8, calc()); */
   gap: 2rem;
   padding: 0.5rem min(2rem, 5%);
 
@@ -39,9 +37,6 @@ const TextContainer = styled.div`
   & > h2 {
     color: #8c7466;
     font-size: 1.5rem;
-  }
-
-  & > p {
   }
 `;
 
