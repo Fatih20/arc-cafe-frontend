@@ -3,14 +3,14 @@ import styled from 'styled-components';
 
 import Promotional from './home/promotional';
 import About from './home/about';
-import Menu from './menu';
+import Store from './home/store';
 
 function Main() {
   return (
     <>
       <Promotional />
       <About />
-      <Menu />
+      <Store />
     </>
   );
 }
