@@ -53,11 +53,11 @@ function Header() {
   }
 
   function navigateToHome() {
-    navigate('/arc-cafe/');
+    navigate('/');
   }
 
   function navigateToMenu() {
-    navigate('/arc-cafe/menu');
+    navigate('/menu');
   }
 
   return (
@@ -72,14 +72,12 @@ function Header() {
         <NavigationButton onClick={navigateToHome} href="#Store">
           STORE
         </NavigationButton>
-        <NavigationButton onClick={navigateToMenu} href="#">
+        <NavigationButton onClick={navigateToMenu} href="">
           MENU
         </NavigationButton>
       </Navigation>
       <LogoButton
-        onClick={
-          isLoggedIn ? navigateToMenu : () => navigate('/arc-cafe/signup')
-        }
+        onClick={isLoggedIn ? navigateToMenu : () => navigate('/signup')}
       >
         <HeaderLogo src={cartLogo} />
       </LogoButton>

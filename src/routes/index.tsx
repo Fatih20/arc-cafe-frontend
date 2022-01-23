@@ -6,13 +6,11 @@ import LogIn from '../components/login';
 import Menu from '../components/menu';
 import HeaderFooter from '../components/headerfooter';
 
-import IsLoggedInProvider from '../context/isLoggedIn';
-
 function AppRoutes() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/arc-cafe">
+        <Route path="/">
           <Route
             index
             element={

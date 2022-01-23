@@ -88,7 +88,7 @@ function LogIn() {
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
     login(email, password)
-      .then(() => navigate('/arc-cafe-frontend'))
+      .then(() => navigate('/'))
       .catch((err) => {
         console.log(err);
       });

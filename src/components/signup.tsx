@@ -90,7 +90,7 @@ function SignUp() {
     e.preventDefault();
 
     register(name, email, password).then(() => {
-      navigate('/arc-cafe-frontend');
+      navigate('/');
     });
   };
   return (
@@ -128,9 +128,7 @@ function SignUp() {
           </StyledForm>
           <SignInOption>
             Already have an account?{' '}
-            <SignInLink onClick={() => navigate('/arc-cafe/login')}>
-              Sign in
-            </SignInLink>
+            <SignInLink onClick={() => navigate('/login')}>Sign in</SignInLink>
           </SignInOption>
         </FormContainer>
       </Main>
