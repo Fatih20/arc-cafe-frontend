@@ -5,7 +5,6 @@ import store2 from '../../assets/store-2-resized.png';
 import store3 from '../../assets/store-3-resized.png';
 
 interface IStoreImagesProps {
-  nthImage: number;
   column: string;
   row: string;
 }
@@ -16,7 +15,7 @@ const Main = styled.div`
   /* grid-template-columns: 1fr;
   grid-template-rows: repeat(8, calc()); */
   gap: 2rem;
-  padding: 0.5rem;
+  padding: 0.5rem min(2rem, 5%);
 
   @media (min-width: 600px) {
     display: grid;
@@ -63,9 +62,9 @@ function Store() {
           Barat 40111
         </p>
       </TextContainer>
-      <StoreImages src={store1} nthImage={1} column={'1/3'} row={'1/3'} />
-      <StoreImages src={store2} nthImage={2} column={'1/3'} row={'3/5'} />
-      <StoreImages src={store3} nthImage={3} column={'3/5'} row={'2/5'} />
+      <StoreImages src={store1} column={'1/3'} row={'1/3'} />
+      <StoreImages src={store2} column={'1/3'} row={'3/5'} />
+      <StoreImages src={store3} column={'3/5'} row={'2/5'} />
     </Main>
   );
 }
