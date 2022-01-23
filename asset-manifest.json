@@ -1,13 +1,22 @@
 {
   "files": {
-    "main.css": "/arc-cafe-frontend/static/css/main.f2a0d5e5.css",
-    "main.js": "/arc-cafe-frontend/static/js/main.3090e4cb.js",
-    "index.html": "/arc-cafe-frontend/index.html",
-    "main.f2a0d5e5.css.map": "/arc-cafe-frontend/static/css/main.f2a0d5e5.css.map",
-    "main.3090e4cb.js.map": "/arc-cafe-frontend/static/js/main.3090e4cb.js.map"
+    "main.css": "/arc-cafe/static/css/main.9da99be3.css",
+    "main.js": "/arc-cafe/static/js/main.0b08e02e.js",
+    "static/media/about-bg.jpg": "/arc-cafe/static/media/about-bg.d59ee5593088139b7155.jpg",
+    "static/media/store-3-resized.png": "/arc-cafe/static/media/store-3-resized.4a13db3be820af8883b9.png",
+    "static/media/header-cropped.png": "/arc-cafe/static/media/header-cropped.5a10f85bbb9bfbfe7193.png",
+    "static/media/store-2-resized.png": "/arc-cafe/static/media/store-2-resized.a34588093fae35c5178b.png",
+    "static/media/store-1.jpg": "/arc-cafe/static/media/store-1.8a6849979f31b30a91f5.jpg",
+    "static/media/coffeehour.png": "/arc-cafe/static/media/coffeehour.bb3f0bf1ed4c35c32e97.png",
+    "static/media/coffeehour_black.png": "/arc-cafe/static/media/coffeehour_black.d68a4913d536d4a9c598.png",
+    "static/media/instagram.png": "/arc-cafe/static/media/instagram.9836f120000f0e2b6e3c.png",
+    "static/media/twitter.png": "/arc-cafe/static/media/twitter.8e65601e69067aadfe55.png",
+    "index.html": "/arc-cafe/index.html",
+    "main.9da99be3.css.map": "/arc-cafe/static/css/main.9da99be3.css.map",
+    "main.0b08e02e.js.map": "/arc-cafe/static/js/main.0b08e02e.js.map"
   },
   "entrypoints": [
-    "static/css/main.f2a0d5e5.css",
-    "static/js/main.3090e4cb.js"
+    "static/css/main.9da99be3.css",
+    "static/js/main.0b08e02e.js"
   ]
 }
