@@ -32,7 +32,11 @@ const Main = styled.div`
   flex-direction: column;
   gap: 2rem;
   justify-content: center;
-  padding: 1.5rem min(2rem, 10%);
+  padding: 1.5rem min(1rem, 10%);
+
+  @media (min-width: 600px) {
+    padding: 1.5rem min(2rem, 10%);
+  }
 `;
 
 const TotalsContainer = styled.div`
@@ -44,7 +48,7 @@ const TotalsContainer = styled.div`
   row-gap: 1.5rem;
   width: 100%;
 
-  @media (min-width: 600px) {
+  @media (min-width: 900px) {
     grid-template-columns: 7fr 3fr;
     grid-template-rows: 4fr 4fr 1fr;
   }
@@ -72,10 +76,10 @@ const GridContainer = styled.div<IGridBoxProps>`
       return '7/1/9/2';
     }
   }};
+  padding: ${(props) => (props.isBill ? '2.25rem 0.75rem' : '0.75rem')};
 
-  padding: ${(props) => (props.isBill ? '2.25rem 1.5rem' : '1.5rem')};
-
-  @media (min-width: 600px) {
+  @media (min-width: 900px) {
+    padding: ${(props) => (props.isBill ? '2.25rem 1.5rem' : '1.5rem')};
     grid-area: ${({ isBill, isProfile, isPrice }) => {
       if (isBill) {
         return '1/1/4/2';
@@ -101,7 +105,10 @@ const RowContainer = styled.div<IRowContainer>`
   font-size: ${({ isTotalPrice }) => (isTotalPrice ? '1.5rem' : null)};
   grid-template-columns: 4fr 2fr 1fr 4fr;
   grid-template-rows: 1fr;
+  column-gap: 0.5rem;
   width: 100%;
+
+  /* border: solid 1px black; */
 `;
 
 const ItemsBoughtName = styled.div`
@@ -159,9 +166,16 @@ const Dashes = styled.p`
 `;
 
 const PriceType = styled.p`
+  justify-self: start;
   font-weight: bold;
-  grid-column: 2/3;
+  grid-column: 1/2;
   grid-row: 1;
+
+  @media (min-width: 600px) {
+    grid-column: 2/3;
+  }
+
+  /* border: solid 1px black; */
 `;
 
 const CurrencyInLatter = styled.p`
@@ -169,6 +183,8 @@ const CurrencyInLatter = styled.p`
   font-weight: bold;
   grid-column: 3/4;
   grid-row: 1;
+
+  /* border: solid 1px black; */
 `;
 
 const Prices = styled.p`
@@ -176,6 +192,8 @@ const Prices = styled.p`
   font-weight: bold;
   grid-column: 4/5;
   grid-row: 1;
+
+  /* border: solid 1px black; */
 `;
 
 const FormattedShortText = styled.p``;
