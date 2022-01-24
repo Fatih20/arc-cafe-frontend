@@ -33,17 +33,7 @@ const Subtitle = styled.p`
 
 const BackButton = styled.button`
   background-color: #95c79d;
-  border-radius: 0.25rem;
-  color: white;
-  font-size: 1em;
-  font-weight: 900;
-  margin: 0.5rem 0 0 0;
-  padding: 0.3rem 0.75rem;
-`;
-
-const SubmitButton = styled.button`
-  background-color: #95c79d;
-  border-radius: 1.5rem;
+  border-radius: 0.1rem;
   color: white;
   font-size: 1em;
   font-weight: 900;
