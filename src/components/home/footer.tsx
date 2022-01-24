@@ -6,7 +6,7 @@ import coffeeHour from '../../assets/coffeehour.png';
 
 const Main = styled.div`
   align-items: center;
-  background-color: white;
+  background-color: #fafafa;
   display: flex;
   flex-direction: column;
   gap: 1rem;
