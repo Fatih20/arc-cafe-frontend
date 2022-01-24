@@ -4,6 +4,7 @@ import Home from '../components/home';
 import SignIn from '../components/signup';
 import LogIn from '../components/login';
 import Menu from '../components/menu';
+import Checked from '../components/checked';
 import HeaderFooter from '../components/headerfooter';
 
 export const BASE_URL = '/arc-cafe-frontend';
@@ -42,6 +43,14 @@ function AppRoutes() {
             element={
               <HeaderFooter>
                 <LogIn />
+              </HeaderFooter>
+            }
+          />
+          <Route
+            path="checked"
+            element={
+              <HeaderFooter>
+                <Checked />
               </HeaderFooter>
             }
           />
