@@ -15,6 +15,10 @@ interface IEndToEndTextContainerProps {
   isTotal?: boolean;
 }
 
+interface IRowContainer {
+  isTotalPrice?: boolean;
+}
+
 type boughtItems = {
   amount: number;
   name: string;
@@ -85,9 +89,39 @@ const GridContainer = styled.div<IGridBoxProps>`
 `;
 
 const CoreBill = styled.div`
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  margin-top: 2rem;
+  width: 100%;
+`;
+
+const RowContainer = styled.div<IRowContainer>`
   display: grid;
+  font-size: ${({ isTotalPrice }) => (isTotalPrice ? '1.5rem' : null)};
   grid-template-columns: 4fr 2fr 1fr 4fr;
-  grid-template-rows: repeat(4, 1fr);
+  grid-template-rows: 1fr;
+  width: 100%;
+`;
+
+const ItemsBoughtName = styled.div`
+  justify-self: start;
+  grid-column: 1/2;
+`;
+
+const ItemsBoughtPrice = styled.div`
+  justify-self: start;
+  grid-column: 2/3;
+`;
+
+const Currency = styled.div`
+  justify-self: end;
+  grid-column: 3/4;
+`;
+
+const TotalPrice = styled.div`
+  justify-self: end;
+  grid-column: 4/5;
 `;
 
 const BackButton = styled.button`
@@ -119,6 +153,31 @@ const BillTitle = styled.h2`
   font-weight: 800;
 `;
 
+const Dashes = styled.p`
+  grid-row: 1;
+  grid-column: 5/6;
+`;
+
+const PriceType = styled.p`
+  font-weight: bold;
+  grid-column: 2/3;
+  grid-row: 1;
+`;
+
+const CurrencyInLatter = styled.p`
+  justify-self: end;
+  font-weight: bold;
+  grid-column: 3/4;
+  grid-row: 1;
+`;
+
+const Prices = styled.p`
+  justify-self: end;
+  font-weight: bold;
+  grid-column: 4/5;
+  grid-row: 1;
+`;
+
 const FormattedShortText = styled.p``;
 
 const EndToEndTextContainer = styled.div<IEndToEndTextContainerProps>`
@@ -137,13 +196,55 @@ const Spacer = styled.div`
   flex-grow: 1;
 `;
 
+const TotalText = styled.h2`
+  justify-self: end;
+  grid-column: 3/4;
+  grid-row: 1;
+`;
+
+const ActualTotalPrice = styled.h2`
+  justify-self: end;
+  grid-column: 4/5;
+  grid-row: 1;
+`;
+
 export default function Checkout() {
   const navigate = useNavigate();
 
-  const orders: boughtItems[] = [];
+  const orders: boughtItems[] = [
+    { name: 'Flat White', price: 23000, amount: 1 },
+  ];
+
+  const totalPrice = orders.reduce(
+    (previousSum, { price }) => previousSum + price,
+    0
+  );
+
+  const shipping = 0;
+
+  const totalWithShipping = totalPrice + shipping;
+
+  const taxed = totalWithShipping * 0.1;
+  const totalWithTax = totalWithShipping + taxed;
 
   function processCheckout() {
     navigate(`${BASE_URL}/checked`);
+  }
+
+  function periodInserted(unPeriodedPrice: number) {
+    const stringifiedPrice = unPeriodedPrice.toFixed(0);
+    if (stringifiedPrice.length > 3) {
+      return (
+        stringifiedPrice.slice(0, stringifiedPrice.length - 3) +
+        '.' +
+        stringifiedPrice.slice(
+          stringifiedPrice.length - 3,
+          stringifiedPrice.length
+        )
+      );
+    } else {
+      return stringifiedPrice;
+    }
   }
 
   return (
@@ -157,7 +258,57 @@ export default function Checkout() {
               Jl. Braga No. 21, Kota Bandung
             </FormattedShortText>
           </BillTitleContainer>
-
+          <EndToEndTextContainer>
+            <FormattedShortText>No. Orders</FormattedShortText>
+            <Spacer />
+            <FormattedShortText>Time</FormattedShortText>
+          </EndToEndTextContainer>
+          <EndToEndTextContainer>
+            <FormattedShortText>Bar</FormattedShortText>
+            <Spacer />
+            <FormattedShortText>Ditra</FormattedShortText>
+          </EndToEndTextContainer>
+          <CoreBill>
+            {orders.map(({ name, price, amount }) => {
+              return (
+                <RowContainer>
+                  <ItemsBoughtName>
+                    {amount}x {name}
+                  </ItemsBoughtName>
+                  <ItemsBoughtPrice>@ {periodInserted(price)}</ItemsBoughtPrice>
+                  <Currency>IDR</Currency>
+                  <TotalPrice>{periodInserted(amount * price)}</TotalPrice>
+                </RowContainer>
+              );
+            })}
+            <RowContainer>
+              <Dashes>- - - - - - - - - -</Dashes>
+            </RowContainer>
+            <RowContainer>
+              <PriceType>Subtotal</PriceType>
+              <CurrencyInLatter>IDR</CurrencyInLatter>
+              <Prices>{periodInserted(totalPrice)}</Prices>
+            </RowContainer>
+            <RowContainer>
+              <PriceType>Shipping</PriceType>
+              <CurrencyInLatter>IDR</CurrencyInLatter>
+              <Prices>{periodInserted(shipping)}</Prices>
+            </RowContainer>
+            <RowContainer>
+              <PriceType>Tax</PriceType>
+              <CurrencyInLatter>IDR</CurrencyInLatter>
+              <Prices>{periodInserted(taxed)}</Prices>
+            </RowContainer>
+            <RowContainer>
+              <Dashes>- - - - - - - - - -</Dashes>
+            </RowContainer>
+            <RowContainer isTotalPrice={true}>
+              <TotalText>TOTAL</TotalText>
+              <ActualTotalPrice>
+                {periodInserted(totalWithTax)}
+              </ActualTotalPrice>
+            </RowContainer>
+          </CoreBill>
           <Spacer />
           <FormattedShortText>022 88885478</FormattedShortText>
           <FormattedShortText>coffeehour@cafe.co.id</FormattedShortText>
