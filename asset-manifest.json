@@ -1,8 +1,13 @@
 {
   "files": {
     "main.css": "/arc-cafe-frontend/static/css/main.9da99be3.css",
-    "main.js": "/arc-cafe-frontend/static/js/main.5fad64fc.js",
+    "main.js": "/arc-cafe-frontend/static/js/main.3384aba3.js",
+    "static/media/cappucino.png": "/arc-cafe-frontend/static/media/cappucino.2a66621734f2e6a67697.png",
+    "static/media/flat-white.png": "/arc-cafe-frontend/static/media/flat-white.456354a9c5473a17531f.png",
+    "static/media/macaron.png": "/arc-cafe-frontend/static/media/macaron.195f063bfc9ef0407a48.png",
+    "static/media/espresso.png": "/arc-cafe-frontend/static/media/espresso.10283db2afa0803db772.png",
     "static/media/about-bg.jpg": "/arc-cafe-frontend/static/media/about-bg.d59ee5593088139b7155.jpg",
+    "static/media/fries.png": "/arc-cafe-frontend/static/media/fries.bd767927d3a2f8358a69.png",
     "static/media/store-3-resized.png": "/arc-cafe-frontend/static/media/store-3-resized.4a13db3be820af8883b9.png",
     "static/media/header-cropped.png": "/arc-cafe-frontend/static/media/header-cropped.5a10f85bbb9bfbfe7193.png",
     "static/media/store-2-resized.png": "/arc-cafe-frontend/static/media/store-2-resized.a34588093fae35c5178b.png",
@@ -10,13 +15,14 @@
     "static/media/coffeehour.png": "/arc-cafe-frontend/static/media/coffeehour.bb3f0bf1ed4c35c32e97.png",
     "static/media/coffeehour_black.png": "/arc-cafe-frontend/static/media/coffeehour_black.d68a4913d536d4a9c598.png",
     "static/media/instagram.png": "/arc-cafe-frontend/static/media/instagram.9836f120000f0e2b6e3c.png",
+    "static/media/checked.png": "/arc-cafe-frontend/static/media/checked.6f298cca57a5a8b36055.png",
     "static/media/twitter.png": "/arc-cafe-frontend/static/media/twitter.8e65601e69067aadfe55.png",
     "index.html": "/arc-cafe-frontend/index.html",
     "main.9da99be3.css.map": "/arc-cafe-frontend/static/css/main.9da99be3.css.map",
-    "main.5fad64fc.js.map": "/arc-cafe-frontend/static/js/main.5fad64fc.js.map"
+    "main.3384aba3.js.map": "/arc-cafe-frontend/static/js/main.3384aba3.js.map"
   },
   "entrypoints": [
     "static/css/main.9da99be3.css",
-    "static/js/main.5fad64fc.js"
+    "static/js/main.3384aba3.js"
   ]
 }
