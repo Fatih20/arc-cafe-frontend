@@ -29,10 +29,11 @@ const images = [espresso, cappuccino, flatWhite, fries, macaron];
 
 const Main = styled.div`
   --menuImageOverlap: 7.5rem;
+  --sidePadding: 1rem;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  padding: 0 1rem;
+  padding: 0 var(--sidePadding);
 `;
 
 const Header = styled.div`
@@ -42,10 +43,49 @@ const Header = styled.div`
 `;
 
 const ActualMenu = styled.div`
+  --cardBaseWidth: 250px;
+  --cardBaseGap: 1em;
+  --totalSpaceForCardMinusGap: calc(100vw - 2 * var(--sidePadding));
+  --amountOfCardInOneScreen: 1;
+  --cardWidth: calc(
+    (
+        var(--totalSpaceForCardMinusGap) - (var(--amountOfCardInOneScreen) - 1) *
+          var(--cardBaseGap)
+      ) / var(--amountOfCardInOneScreen)
+  );
+
   align-items: center;
   display: flex;
   flex-grow: 1;
+  gap: var(--cardBaseGap);
+  overflow: auto;
   padding-top: var(--menuImageOverlap);
+  padding-bottom: 1rem;
+  scroll-snap-type: mandatory;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: thin;
+  scrollbar-color: rgb(51, 51, 51);
+  scroll-snap-points-x: repeat(var(--cardWidth));
+  width: 100%;
+
+  &::-webkit-scrollbar {
+    /* width: 200px; */
+    height: 5px;
+  }
+
+  @media (min-width: 600px) {
+    --amountOfCardInOneScreen: 2;
+  }
+
+  @media (min-width: 900px) {
+    --amountOfCardInOneScreen: 4;
+    --cardWidth: calc(
+      (
+          var(--totalSpaceForCardMinusGap) - (var(--amountOfCardInOneScreen)) *
+            var(--cardBaseGap)
+        ) / var(--amountOfCardInOneScreen)
+    );
+  }
 `;
 
 const TitleContainer = styled.div`
@@ -129,7 +169,8 @@ const MenuItemCard = styled.div`
   display: flex;
   flex-direction: column;
   height: 25rem;
-  width: clamp(300px, 20%, 600px);
+  min-width: var(--cardWidth);
+  scroll-snap-align: start;
   padding: 0 1.25rem 1.25rem 1.25rem;
 
   &:hover {
@@ -141,6 +182,11 @@ const MenuItemCard = styled.div`
 const MenuItemImage = styled.img`
   pointer-events: none;
   margin-top: calc(var(--menuImageOverlap) * -1);
+
+  @media (min-width: 600px) {
+    height: auto;
+    width: 250px;
+  }
 `;
 const MenuItemTitle = styled.h2`
   align-self: flex-start;
@@ -211,6 +257,66 @@ function Menu() {
   }
 
   const menuContent: menuItems[] = [
+    {
+      name: 'Espresso',
+      type: 'coffee',
+      composition: [
+        {
+          name: 'Espresso',
+          percentage: 20,
+        },
+      ],
+      price: 23,
+      imageId: 0,
+    },
+    {
+      name: 'Espresso',
+      type: 'coffee',
+      composition: [
+        {
+          name: 'Espresso',
+          percentage: 20,
+        },
+      ],
+      price: 23,
+      imageId: 0,
+    },
+    {
+      name: 'Espresso',
+      type: 'coffee',
+      composition: [
+        {
+          name: 'Espresso',
+          percentage: 20,
+        },
+      ],
+      price: 23,
+      imageId: 0,
+    },
+    {
+      name: 'Espresso',
+      type: 'coffee',
+      composition: [
+        {
+          name: 'Espresso',
+          percentage: 20,
+        },
+      ],
+      price: 23,
+      imageId: 0,
+    },
+    {
+      name: 'Espresso',
+      type: 'coffee',
+      composition: [
+        {
+          name: 'Espresso',
+          percentage: 20,
+        },
+      ],
+      price: 23,
+      imageId: 0,
+    },
     {
       name: 'Espresso',
       type: 'coffee',
