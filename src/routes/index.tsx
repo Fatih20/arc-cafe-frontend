@@ -6,6 +6,7 @@ import LogIn from '../components/login';
 import Menu from '../components/menu';
 import Checkout from '../components/checkout';
 import Checked from '../components/checked';
+import Footer from '../components/home/footer';
 
 import HeaderFooter from '../components/headerfooter';
 
@@ -24,14 +25,7 @@ function AppRoutes() {
               </HeaderFooter>
             }
           />
-          <Route
-            path="menu"
-            element={
-              <HeaderFooter>
-                <Menu />
-              </HeaderFooter>
-            }
-          />
+          <Route path="menu" element={<Menu />} />
           <Route
             path="signup"
             element={
