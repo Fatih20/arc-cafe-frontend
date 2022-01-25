@@ -42,52 +42,6 @@ const Header = styled.div`
   padding: 1rem 0;
 `;
 
-const ActualMenu = styled.div`
-  --cardBaseWidth: 250px;
-  --cardBaseGap: 1em;
-  --totalSpaceForCardMinusGap: calc(100vw - 2 * var(--sidePadding));
-  --amountOfCardInOneScreen: 1;
-  --cardWidth: calc(
-    (
-        var(--totalSpaceForCardMinusGap) - (var(--amountOfCardInOneScreen) - 1) *
-          var(--cardBaseGap)
-      ) / var(--amountOfCardInOneScreen)
-  );
-
-  align-items: center;
-  display: flex;
-  flex-grow: 1;
-  gap: var(--cardBaseGap);
-  overflow: auto;
-  padding-top: var(--menuImageOverlap);
-  padding-bottom: 1rem;
-  scroll-snap-type: mandatory;
-  scroll-snap-type: x mandatory;
-  scrollbar-width: thin;
-  scrollbar-color: rgb(51, 51, 51);
-  scroll-snap-points-x: repeat(var(--cardWidth));
-  width: 100%;
-
-  &::-webkit-scrollbar {
-    /* width: 200px; */
-    height: 5px;
-  }
-
-  @media (min-width: 600px) {
-    --amountOfCardInOneScreen: 2;
-  }
-
-  @media (min-width: 900px) {
-    --amountOfCardInOneScreen: 4;
-    --cardWidth: calc(
-      (
-          var(--totalSpaceForCardMinusGap) - (var(--amountOfCardInOneScreen)) *
-            var(--cardBaseGap)
-        ) / var(--amountOfCardInOneScreen)
-    );
-  }
-`;
-
 const TitleContainer = styled.div`
   align-self: center;
   align-items: center;
@@ -153,6 +107,61 @@ const BasketCounter = styled.div`
   }
 `;
 
+const ActualMenu = styled.div`
+  --cardBaseWidth: 250px;
+  --cardBaseGap: 1em;
+  --totalSpaceForCardMinusGap: calc(100vw - 2 * var(--sidePadding));
+  --amountOfCardInOneScreen: 1;
+  --cardWidth: calc(
+    (
+        var(--totalSpaceForCardMinusGap) - (var(--amountOfCardInOneScreen) - 1) *
+          var(--cardBaseGap)
+      ) / var(--amountOfCardInOneScreen)
+  );
+
+  align-items: center;
+  display: flex;
+  flex-grow: 1;
+  gap: var(--cardBaseGap);
+  overflow: auto;
+  padding-top: var(--menuImageOverlap);
+  padding-bottom: 1rem;
+  scroll-snap-type: mandatory;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: thin;
+  scrollbar-color: rgb(51, 51, 51);
+  scroll-snap-points-x: repeat(var(--cardWidth));
+  width: 100%;
+
+  &::-webkit-scrollbar {
+    height: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #d7cdc7;
+    border-radius: 1em;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #8c7466;
+    border-radius: 1em;
+  }
+
+  @media (min-width: 600px) {
+    --amountOfCardInOneScreen: 2;
+  }
+
+  @media (min-width: 900px) {
+    --amountOfCardInOneScreen: 4;
+    --cardWidth: calc(
+      (
+          var(--totalSpaceForCardMinusGap) - (var(--amountOfCardInOneScreen)) *
+            var(--cardBaseGap)
+        ) / var(--amountOfCardInOneScreen)
+    );
+  }
+`;
+
 const MenuItemCard = styled.div`
   --normalPrimaryTextColor: #8c7466;
   --normalSecondaryTextColor: #8c7466;
@@ -172,6 +181,7 @@ const MenuItemCard = styled.div`
   min-width: var(--cardWidth);
   scroll-snap-align: start;
   padding: 0 1.25rem 1.25rem 1.25rem;
+  user-select: none;
 
   &:hover {
     background-color: var(--hoveredBackground);
