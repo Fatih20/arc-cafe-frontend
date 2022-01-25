@@ -9,6 +9,8 @@ import espresso from '../assets/espresso.png';
 import cappuccino from '../assets/cappucino.png';
 import fries from '../assets/fries.png';
 import macaron from '../assets/macaron.png';
+import { useNavigate } from 'react-router-dom';
+import { BASE_URL } from '../routes';
 
 type whatCanBeShown = 'all' | 'food' | 'coffee';
 
@@ -47,9 +49,13 @@ const TitleContainer = styled.div`
   align-items: center;
   display: flex;
   flex-direction: column;
-  font-size: 1.5rem;
+  font-size: 1rem;
   max-width: 600px;
   width: 100%;
+
+  @media (min-width: 1600px) {
+    font-size: 1.5rem;
+  }
 
   /* border: solid 1px black; */
 `;
@@ -68,6 +74,7 @@ const Title = styled.h2`
 `;
 
 const HeaderLogo = styled.img`
+  cursor: pointer;
   display: inline-block;
   height: 1rem;
 `;
@@ -266,6 +273,7 @@ const EndToEndTextContainer = styled.div`
 
 function Menu() {
   const [whatIsShown, setWhatIsShown] = useState('all' as whatCanBeShown);
+  const navigate = useNavigate();
 
   function priceMaker(price: number) {
     return (
@@ -364,7 +372,7 @@ function Menu() {
   return (
     <Main>
       <Header>
-        <HeaderLogo src={logo} />
+        <HeaderLogo src={logo} onClick={() => navigate(`${BASE_URL}/`)} />
         <NavigationButton onClick={() => setWhatIsShown('all')}>
           ALL
         </NavigationButton>
