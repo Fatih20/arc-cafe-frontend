@@ -171,16 +171,24 @@ const CompositionContainer = styled.div`
 `;
 
 const AddToBasketButton = styled.button`
-  background-color: var(--hoveredPrimaryTextColor);
+  background-color: var(--normalPrimaryTextColor);
   border-radius: 1.5rem;
-  color: var(--hoveredBackground);
-  display: none;
+  color: var(--normalBackground);
   font-size: 1em;
   font-weight: 900;
   margin: 0.5rem 0 0 0;
   padding: 0.3rem 0.75rem;
+
   ${MenuItemCard}:hover>& {
-    display: initial;
+    background-color: var(--hoveredPrimaryTextColor);
+    color: var(--hoveredBackground);
+  }
+
+  @media (min-width: 900px) {
+    display: none;
+    ${MenuItemCard}:hover>& {
+      display: initial;
+    }
   }
 `;
 
