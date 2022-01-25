@@ -47,6 +47,7 @@ const TitleContainer = styled.div`
   align-items: center;
   display: flex;
   flex-direction: column;
+  font-size: 1.5rem;
   max-width: 600px;
   width: 100%;
 
@@ -56,12 +57,12 @@ const TitleContainer = styled.div`
 const Title = styled.h2`
   color: #8c7466;
   font-weight: 900;
-  font-size: 1.5rem;
+  font-size: 1.5em;
   text-align: center;
 
   @media (min-width: 600px) {
     align-self: flex-end;
-    font-size: 2.5rem;
+    font-size: 2.5em;
     text-align: right;
   }
 `;
@@ -109,7 +110,7 @@ const BasketCounter = styled.div`
 
 const ActualMenu = styled.div`
   --cardBaseWidth: 250px;
-  --cardBaseGap: 1em;
+  --cardBaseGap: 1rem;
   --totalSpaceForCardMinusGap: calc(100vw - 2 * var(--sidePadding));
   --amountOfCardInOneScreen: 1;
   --cardWidth: calc(
@@ -119,7 +120,6 @@ const ActualMenu = styled.div`
       ) / var(--amountOfCardInOneScreen)
   );
 
-  align-items: center;
   display: flex;
   flex-grow: 1;
   gap: var(--cardBaseGap);
@@ -171,13 +171,15 @@ const MenuItemCard = styled.div`
   --hoveredBackground: #478660;
 
   align-items: center;
+  align-self: stretch;
   background-color: var(--normalBackground);
   box-sizing: border-box;
   border-radius: 1.25rem;
   color: var(--normalPrimaryTextColor);
   display: flex;
   flex-direction: column;
-  height: 25rem;
+  min-height: 25rem;
+  /* height: 100%; */
   min-width: var(--cardWidth);
   scroll-snap-align: start;
   padding: 0 1.25rem 1.25rem 1.25rem;
@@ -186,6 +188,10 @@ const MenuItemCard = styled.div`
   &:hover {
     background-color: var(--hoveredBackground);
     color: var(--hoveredPrimaryTextColor);
+  }
+
+  @media (min-width: 1600px) {
+    font-size: 1.5rem;
   }
 `;
 
@@ -196,6 +202,11 @@ const MenuItemImage = styled.img`
   @media (min-width: 600px) {
     height: auto;
     width: 250px;
+  }
+
+  @media (min-width: 1600px) {
+    height: auto;
+    width: 300px;
   }
 `;
 const MenuItemTitle = styled.h2`
@@ -348,6 +359,8 @@ function Menu() {
       return menuItem.type === whatIsShown;
     }
   });
+
+  console.log(window.innerWidth);
   return (
     <Main>
       <Header>
