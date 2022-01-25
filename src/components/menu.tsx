@@ -139,6 +139,7 @@ const MenuItemCard = styled.div`
 `;
 
 const MenuItemImage = styled.img`
+  pointer-events: none;
   margin-top: calc(var(--menuImageOverlap) * -1);
 `;
 const MenuItemTitle = styled.h2`
