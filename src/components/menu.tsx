@@ -85,6 +85,7 @@ const Navigation = styled.div`
 `;
 
 const NavigationButton = styled.a`
+  cursor: pointer;
   display: flex;
   flex-direction: row;
   font-size: 0.8rem;
@@ -127,7 +128,7 @@ const MenuItemCard = styled.div`
   color: var(--normalPrimaryTextColor);
   display: flex;
   flex-direction: column;
-  height: 400px;
+  height: 25rem;
   width: clamp(300px, 20%, 600px);
   padding: 0 1.25rem 1.25rem 1.25rem;
 
@@ -240,30 +241,38 @@ function Menu() {
         <Title>A HUG IN A MUG</Title>
       </TitleContainer>
       <ActualMenu>
-        {menuContent.map((menuItem) => {
-          return (
-            <MenuItemCard>
-              <MenuItemImage src={images[menuItem.imageId]} />
-              <MenuItemTitle>{menuItem.name}</MenuItemTitle>
-              <CompositionContainer>
-                {menuItem.composition === undefined
-                  ? null
-                  : menuItem.composition.map((menuItemComposition) => {
-                      return (
-                        <EndToEndTextContainer>
-                          <p>{menuItemComposition.name}</p>
-                          <Spacer />
-                          <p>{menuItemComposition.percentage}%</p>
-                        </EndToEndTextContainer>
-                      );
-                    })}
-              </CompositionContainer>
-              <Spacer />
-              {priceMaker(menuItem.price)}
-              <AddToBasketButton>ADD TO BASKET</AddToBasketButton>
-            </MenuItemCard>
-          );
-        })}
+        {menuContent
+          .filter((menuItem) => {
+            if (whatIsShown === 'all') {
+              return menuItem;
+            } else {
+              return menuItem.type === whatIsShown;
+            }
+          })
+          .map((menuItem) => {
+            return (
+              <MenuItemCard>
+                <MenuItemImage src={images[menuItem.imageId]} />
+                <MenuItemTitle>{menuItem.name}</MenuItemTitle>
+                <CompositionContainer>
+                  {menuItem.composition === undefined
+                    ? null
+                    : menuItem.composition.map((menuItemComposition) => {
+                        return (
+                          <EndToEndTextContainer>
+                            <p>{menuItemComposition.name}</p>
+                            <Spacer />
+                            <p>{menuItemComposition.percentage}%</p>
+                          </EndToEndTextContainer>
+                        );
+                      })}
+                </CompositionContainer>
+                <Spacer />
+                {priceMaker(menuItem.price)}
+                <AddToBasketButton>ADD TO BASKET</AddToBasketButton>
+              </MenuItemCard>
+            );
+          })}
       </ActualMenu>
 
       <Footer />
