@@ -1,29 +1,50 @@
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { logout } from '../../utils/api';
 import { useQueryClient, useMutation } from 'react-query';
+import { useIsLoggedIn } from '../../context/isLoggedIn';
+
+import blackLogo from '../../assets/coffeehour_black.png';
+import cartLogo from '../../assets/shopping-bag-cropped.png';
+
+import { BASE_URL } from '../../routes';
 
 const Main = styled.div`
   align-items: center;
-  background-color: green;
+  background-color: #8c7466;
   color: white;
   display: flex;
-  flex-direction: column;
-`;
-
-const Navigation = styled.div`
-  display: flex;
-  gap: 1rem;
+  height: 7.5vh;
+  padding: 0.95rem 1rem;
+  position: relative;
 `;
 
 const Title = styled.h1``;
 
-const LogSignWrapper = styled.div`
-  display: ${({ show }: { show: boolean }) => (show ? 'initial' : 'none')};
+const LogoButton = styled.button``;
+
+const HeaderLogo = styled.img`
+  color: white;
+  display: inline-block;
+  filter: invert();
+  height: 1rem;
 `;
 
-function Header({ isLoggedIn }: { isLoggedIn: boolean }) {
+const Navigation = styled.div`
+  display: flex;
+  flex-grow: 1;
+  justify-content: center;
+  gap: 1rem;
+`;
+
+const NavigationButton = styled.a`
+  font-size: 0.8rem;
+`;
+
+function Header() {
   const queryClient = useQueryClient();
+  const isLoggedIn = useIsLoggedIn();
+  const navigate = useNavigate();
 
   const { mutateAsync: logoutAndRefetch } = useMutation(logout, {
     onSuccess: () => queryClient.invalidateQueries('me'),
@@ -33,23 +54,37 @@ function Header({ isLoggedIn }: { isLoggedIn: boolean }) {
     logoutAndRefetch();
   }
 
+  function navigateToHome() {
+    navigate(`${BASE_URL}/`);
+  }
+
+  function navigateToMenu() {
+    navigate(`${BASE_URL}/menu`);
+  }
+
   return (
     <Main>
-      <Title>Coffee Hour</Title>
+      <LogoButton onClick={navigateToHome}>
+        <HeaderLogo src={blackLogo} />
+      </LogoButton>
       <Navigation>
-        <a href="#About">About</a>
-        <a href="#Location">Location</a>
-        <a href="#Store">Store</a>
-        <LogSignWrapper show={!isLoggedIn}>
-          <Link to="/arc-cafe-frontend/login">Login</Link>
-        </LogSignWrapper>
-        <LogSignWrapper show={!isLoggedIn}>
-          <Link to="/arc-cafe-frontend/signup">Signup</Link>
-        </LogSignWrapper>
-        <LogSignWrapper show={isLoggedIn}>
-          <button onClick={handleLogout}>Log Out</button>
-        </LogSignWrapper>
+        <NavigationButton onClick={navigateToHome} href="#About">
+          ABOUT
+        </NavigationButton>
+        <NavigationButton onClick={navigateToHome} href="#Store">
+          STORE
+        </NavigationButton>
+        <NavigationButton onClick={navigateToMenu} href="">
+          MENU
+        </NavigationButton>
       </Navigation>
+      <LogoButton
+        onClick={
+          isLoggedIn ? navigateToMenu : () => navigate(`${BASE_URL}/signup`)
+        }
+      >
+        <HeaderLogo src={cartLogo} />
+      </LogoButton>
     </Main>
   );
 }
