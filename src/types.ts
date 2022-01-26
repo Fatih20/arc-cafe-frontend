@@ -4,6 +4,15 @@ export interface IUser {
     id: string;
 }
 
+export interface ICartItem {
+    id : string,
+    customerId : string,
+    createdAt : string,
+    menuId : string,
+    orderId : string | null,
+    menu : IMenu
+}
+
 export interface IMenu {
     id : string,
     name : string,
@@ -12,7 +21,3 @@ export interface IMenu {
     type : "DRINK" | "FOOD",
     composition : object
 }
-
-export type noParamReturnVoid = () => void;
-
-export type stateOfPage = "main" | "menu" | "login" | "signup";

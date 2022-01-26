@@ -26,12 +26,13 @@ export async function logout() {
 }
 
 export async function getMenus(){
-  return await axios.get(BASE_URL + '/menus/', {}).then((res) => res.data);
+  return await axios.get(BASE_URL + '/menus/', OPTIONS).then((res) => res.data);
 }
 
 export async function addToCart(menuId : string){
+  return await axios.post(BASE_URL + '/menus/cart', {menuId}, OPTIONS).then((res) => res.status);
+}
 
-  return await axios.post(BASE_URL + '/menus/cart', {menuId}, OPTIONS).then((res) => {
-    console.log(res.status)
-  });
+export async function getItemsInCart() {
+  return await axios.get(BASE_URL + '/menus/cart', OPTIONS).then((res) => res.data);
 }

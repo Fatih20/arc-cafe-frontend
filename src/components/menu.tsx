@@ -3,6 +3,10 @@ import { useEffect, useState } from 'react';
 
 import Footer from './home/footer';
 
+import { getItemsInCart } from '../utils/api';
+
+import { useQueryClient, useMutation, QueryClient } from 'react-query';
+
 import logo from '../assets/coffeehour.png';
 import flatWhite from '../assets/flat-white.png';
 import espresso from '../assets/espresso.png';
@@ -13,13 +17,10 @@ import { useNavigate } from 'react-router-dom';
 import { BASE_URL } from '../routes';
 import useMenu from '../customHooks/useMenu';
 import { addToCart } from '../utils/api';
+import useAddToCartIfLoggedIn from '../utils/addToCartIfLoggedIn';
+import useCart from '../customHooks/useCart';
 
 type whatCanBeShown = 'ALL' | 'FOOD' | 'DRINK';
-
-type compositionOfMenu = {
-  name: string;
-  percentage: number;
-};
 
 interface ICoreMenuProps {
   whatIsShown: whatCanBeShown;
@@ -270,9 +271,18 @@ const EndToEndTextContainer = styled.div`
 `;
 
 function CoreMenu(props: ICoreMenuProps) {
+  const queryClient = useQueryClient();
   const { whatIsShown } = props;
   const { menu, isLoading } = useMenu();
   const navigate = useNavigate();
+  const { addToCartIfLoggedIn } = useAddToCartIfLoggedIn(navigate);
+
+  const { mutateAsync: addToBasketAndUpdateCart } = useMutation(
+    addToCartIfLoggedIn,
+    {
+      onSuccess: () => queryClient.invalidateQueries('cart'),
+    }
+  );
 
   function priceMaker(price: number) {
     return (
@@ -295,20 +305,6 @@ function CoreMenu(props: ICoreMenuProps) {
         amount: amount,
       };
     });
-  }
-
-  async function handleAddingToCart(menuId: string) {
-    try {
-      await addToCart(menuId);
-    } catch (error) {
-      let message = 'Unknown error';
-      if (error instanceof Error) {
-        message = error.message;
-        if (message === 'Request failed with status code 401') {
-          navigate(`${BASE_URL}/signup/`);
-        }
-      }
-    }
   }
 
   if (isLoading) {
@@ -347,7 +343,7 @@ function CoreMenu(props: ICoreMenuProps) {
               <Spacer />
               {priceMaker(menuItem.price)}
               <AddToBasketButton
-                onClick={() => handleAddingToCart(menuItem.id)}
+                onClick={() => addToBasketAndUpdateCart(menuItem.id)}
               >
                 ADD TO BASKET
               </AddToBasketButton>
@@ -362,6 +358,7 @@ function CoreMenu(props: ICoreMenuProps) {
 function Menu() {
   const [whatIsShown, setWhatIsShown] = useState('ALL' as whatCanBeShown);
   const navigate = useNavigate();
+  const { cart, isLoading } = useCart(navigate);
 
   function navigateToHome() {
     navigate(`${BASE_URL}/`);
@@ -383,7 +380,7 @@ function Menu() {
         <Spacer />
         <NavigationButton>
           <BasketCounter>
-            <p>1</p>
+            <p>{isLoading ? null : cart.length}</p>
           </BasketCounter>
           MY BASKET
         </NavigationButton>

@@ -5,7 +5,7 @@ import { login, register } from '../utils/api';
 
 import coffeeHour from '../assets/coffeehour.png';
 
-import { BASE_URL } from '../utils/api';
+import { BASE_URL } from '../routes';
 
 const Main = styled.div`
   align-items: center;

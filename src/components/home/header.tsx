@@ -4,6 +4,8 @@ import { logout } from '../../utils/api';
 import { useQueryClient, useMutation } from 'react-query';
 import { useIsLoggedIn } from '../../context/isLoggedIn';
 
+import { getItemsInCart } from '../../utils/api';
+
 import blackLogo from '../../assets/coffeehour_black.png';
 import cartLogo from '../../assets/shopping-bag-cropped.png';
 
@@ -62,6 +64,22 @@ function Header() {
     navigate(`${BASE_URL}/menu`);
   }
 
+  async function handleAccessingCart() {
+    try {
+      console.log(isLoggedIn);
+      const userCart = await getItemsInCart();
+      console.log(userCart);
+    } catch (error) {
+      let message = 'Unknown error';
+      if (error instanceof Error) {
+        message = error.message;
+        if (message === 'Request failed with status code 401') {
+          navigate(`${BASE_URL}/signup/`);
+        }
+      }
+    }
+  }
+
   return (
     <Main>
       <LogoButton onClick={navigateToHome}>
@@ -78,11 +96,7 @@ function Header() {
           MENU
         </NavigationButton>
       </Navigation>
-      <LogoButton
-        onClick={
-          isLoggedIn ? navigateToMenu : () => navigate(`${BASE_URL}/signup`)
-        }
-      >
+      <LogoButton onClick={handleAccessingCart}>
         <HeaderLogo src={cartLogo} />
       </LogoButton>
     </Main>
