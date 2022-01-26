@@ -378,7 +378,7 @@ function Menu() {
           COFFEE
         </NavigationButton>
         <Spacer />
-        <NavigationButton>
+        <NavigationButton onClick={() => navigate(`${BASE_URL}/basket`)}>
           <BasketCounter>
             <p>{isLoading ? null : cart.length}</p>
           </BasketCounter>

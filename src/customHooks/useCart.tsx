@@ -6,7 +6,7 @@ import { ICartItem } from '../types';
 export default function useCart(navigateFunction: (path: string) => void) {
   const { data, isLoading, error } = useQuery('cart', getItemsInCart);
   let message = 'Unknown error';
-  console.log(data);
+  //   console.log(data);
   if (error instanceof Error) {
     message = error.message;
     if (message === 'Request failed with status code 401') {

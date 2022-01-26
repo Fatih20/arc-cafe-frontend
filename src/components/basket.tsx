@@ -63,7 +63,7 @@ export default function Basket() {
     cart.forEach((cartItem) => {
       setItemsSet((prevItemsSet) => {
         prevItemsSet.add(
-          `${cartItem.menu.name.toString()} ${cartItem.menu.id.toString()}`
+          `${cartItem.menu.name.toString()}|||${cartItem.menu.id.toString()}`
         );
         return prevItemsSet;
       });
@@ -79,7 +79,7 @@ export default function Basket() {
   function regroupItems() {
     let intermediateGroupedItems = {} as any;
     itemsSet.forEach((uniqueItemNameAndId) => {
-      const [uniqueItemName, uniqueItemId] = uniqueItemNameAndId.split(' ');
+      const [uniqueItemName, uniqueItemId] = uniqueItemNameAndId.split('|||');
       intermediateGroupedItems[uniqueItemName] = cart.filter(
         (menuItems) => menuItems.menu.name === uniqueItemName
       );
@@ -114,17 +114,20 @@ export default function Basket() {
         <ActualBasket>
           {Array.from(itemsSet).map((uniqueItemNameAndId) => {
             const [uniqueItemName, uniqueItemId] =
-              uniqueItemNameAndId.split(' ');
-            const eachItemsOfTheName = groupedItems[uniqueItemName];
+              uniqueItemNameAndId.split('|||');
+            // const eachItemsOfTheName = groupedItems[uniqueItemName];
             return (
               <BasketItem>
                 <h3>{uniqueItemName}</h3>
                 <button
-                  onClick={() =>
+                  onClick={() => {
                     deleteFromBasketAndUpdateCart(
-                      eachItemsOfTheName[eachItemsOfTheName.length - 1].id
-                    )
-                  }
+                      groupedItems[uniqueItemName][
+                        groupedItems[uniqueItemName].length - 1
+                      ].id
+                    );
+                    regroupItems();
+                  }}
                 >
                   minus
                 </button>

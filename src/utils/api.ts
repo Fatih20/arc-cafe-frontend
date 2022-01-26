@@ -36,3 +36,7 @@ export async function addToCart(menuId : string){
 export async function getItemsInCart() {
   return await axios.get(BASE_URL + '/menus/cart', OPTIONS).then((res) => res.data);
 }
+
+export async function deleteFromCart (specificMenuId: string){
+  return await axios.delete(BASE_URL + `/menus/cart/${specificMenuId}`, OPTIONS).then((res) => res.data)
+}

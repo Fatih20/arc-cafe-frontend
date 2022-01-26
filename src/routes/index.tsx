@@ -9,6 +9,7 @@ import Checked from '../components/checked';
 import Footer from '../components/home/footer';
 
 import HeaderFooter from '../components/headerfooter';
+import Basket from '../components/basket';
 
 export const BASE_URL = '/arc-cafe-frontend';
 
@@ -55,6 +56,14 @@ function AppRoutes() {
             element={
               <HeaderFooter>
                 <Checkout />
+              </HeaderFooter>
+            }
+          />
+          <Route
+            path="basket"
+            element={
+              <HeaderFooter>
+                <Basket />
               </HeaderFooter>
             }
           />
