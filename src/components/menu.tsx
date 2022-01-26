@@ -12,20 +12,13 @@ import macaron from '../assets/macaron.png';
 import { useNavigate } from 'react-router-dom';
 import { BASE_URL } from '../routes';
 import useMenu from '../customHooks/useMenu';
+import { addToCart } from '../utils/api';
 
 type whatCanBeShown = 'ALL' | 'FOOD' | 'DRINK';
 
 type compositionOfMenu = {
   name: string;
   percentage: number;
-};
-
-type menuItems = {
-  type: 'food' | 'coffee';
-  name: string;
-  composition?: compositionOfMenu[];
-  price: number;
-  imageId: number;
 };
 
 interface ICoreMenuProps {
@@ -279,6 +272,7 @@ const EndToEndTextContainer = styled.div`
 function CoreMenu(props: ICoreMenuProps) {
   const { whatIsShown } = props;
   const { menu, isLoading } = useMenu();
+  const navigate = useNavigate();
 
   function priceMaker(price: number) {
     return (
@@ -301,6 +295,20 @@ function CoreMenu(props: ICoreMenuProps) {
         amount: amount,
       };
     });
+  }
+
+  async function handleAddingToCart(menuId: string) {
+    try {
+      await addToCart(menuId);
+    } catch (error) {
+      let message = 'Unknown error';
+      if (error instanceof Error) {
+        message = error.message;
+        if (message === 'Request failed with status code 401') {
+          navigate(`${BASE_URL}/signup/`);
+        }
+      }
+    }
   }
 
   if (isLoading) {
@@ -338,7 +346,11 @@ function CoreMenu(props: ICoreMenuProps) {
               </CompositionContainer>
               <Spacer />
               {priceMaker(menuItem.price)}
-              <AddToBasketButton>ADD TO BASKET</AddToBasketButton>
+              <AddToBasketButton
+                onClick={() => handleAddingToCart(menuItem.id)}
+              >
+                ADD TO BASKET
+              </AddToBasketButton>
             </MenuItemCard>
           );
         })}
@@ -350,6 +362,10 @@ function CoreMenu(props: ICoreMenuProps) {
 function Menu() {
   const [whatIsShown, setWhatIsShown] = useState('ALL' as whatCanBeShown);
   const navigate = useNavigate();
+
+  function navigateToHome() {
+    navigate(`${BASE_URL}/`);
+  }
 
   return (
     <Main>
