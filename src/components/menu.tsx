@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import Footer from './home/footer';
 
@@ -11,8 +11,9 @@ import fries from '../assets/fries.png';
 import macaron from '../assets/macaron.png';
 import { useNavigate } from 'react-router-dom';
 import { BASE_URL } from '../routes';
+import useMenu from '../customHooks/useMenu';
 
-type whatCanBeShown = 'all' | 'food' | 'coffee';
+type whatCanBeShown = 'ALL' | 'FOOD' | 'DRINK';
 
 type compositionOfMenu = {
   name: string;
@@ -26,6 +27,10 @@ type menuItems = {
   price: number;
   imageId: number;
 };
+
+interface ICoreMenuProps {
+  whatIsShown: whatCanBeShown;
+}
 
 const images = [espresso, cappuccino, flatWhite, fries, macaron];
 
@@ -271,115 +276,92 @@ const EndToEndTextContainer = styled.div`
   width: 100%;
 `;
 
-function Menu() {
-  const [whatIsShown, setWhatIsShown] = useState('all' as whatCanBeShown);
-  const navigate = useNavigate();
+function CoreMenu(props: ICoreMenuProps) {
+  const { whatIsShown } = props;
+  const { menu, isLoading } = useMenu();
 
   function priceMaker(price: number) {
     return (
       <MenuItemPrice>
         <h2>Rp</h2>
-        <h2>{price}</h2>
+        <h2>
+          {typeof (price / 1000) === 'number'
+            ? price / 1000
+            : (price / 1000).toFixed(1)}
+        </h2>
         <h2>k</h2>
       </MenuItemPrice>
     );
   }
 
-  const menuContent: menuItems[] = [
-    {
-      name: 'Espresso',
-      type: 'coffee',
-      composition: [
-        {
-          name: 'Espresso',
-          percentage: 20,
-        },
-      ],
-      price: 23,
-      imageId: 0,
-    },
-    {
-      name: 'Espresso',
-      type: 'coffee',
-      composition: [
-        {
-          name: 'Espresso',
-          percentage: 20,
-        },
-      ],
-      price: 23,
-      imageId: 0,
-    },
-    {
-      name: 'Espresso',
-      type: 'coffee',
-      composition: [
-        {
-          name: 'Espresso',
-          percentage: 20,
-        },
-      ],
-      price: 23,
-      imageId: 0,
-    },
-    {
-      name: 'Espresso',
-      type: 'coffee',
-      composition: [
-        {
-          name: 'Espresso',
-          percentage: 20,
-        },
-      ],
-      price: 23,
-      imageId: 0,
-    },
-    {
-      name: 'Espresso',
-      type: 'coffee',
-      composition: [
-        {
-          name: 'Espresso',
-          percentage: 20,
-        },
-      ],
-      price: 23,
-      imageId: 0,
-    },
-    {
-      name: 'Espresso',
-      type: 'coffee',
-      composition: [
-        {
-          name: 'Espresso',
-          percentage: 20,
-        },
-      ],
-      price: 23,
-      imageId: 0,
-    },
-  ];
+  function compositionToArrayConverter(composition: object) {
+    return Object.entries(composition).map(([composerName, amount]) => {
+      return {
+        name: composerName,
+        amount: amount,
+      };
+    });
+  }
 
-  const shownMenuContent = menuContent.filter((menuItem) => {
-    if (whatIsShown === 'all') {
-      return true;
-    } else {
-      return menuItem.type === whatIsShown;
-    }
-  });
+  if (isLoading) {
+    return <></>;
+  } else {
+    console.log(menu);
+    const shownMenuContent = menu.filter((menuItem) => {
+      if (whatIsShown === 'ALL') {
+        return true;
+      } else {
+        return menuItem.type === whatIsShown;
+      }
+    });
+    return (
+      <ActualMenu>
+        {shownMenuContent.map((menuItem) => {
+          return (
+            <MenuItemCard>
+              <MenuItemImage src={menuItem.photoUrl} />
+              <MenuItemTitle>{menuItem.name}</MenuItemTitle>
+              <CompositionContainer>
+                {menuItem.composition === undefined
+                  ? null
+                  : compositionToArrayConverter(menuItem.composition).map(
+                      (menuItemComposition) => {
+                        return (
+                          <EndToEndTextContainer>
+                            <p>{menuItemComposition.name}</p>
+                            <Spacer />
+                            <p>{menuItemComposition.amount}</p>
+                          </EndToEndTextContainer>
+                        );
+                      }
+                    )}
+              </CompositionContainer>
+              <Spacer />
+              {priceMaker(menuItem.price)}
+              <AddToBasketButton>ADD TO BASKET</AddToBasketButton>
+            </MenuItemCard>
+          );
+        })}
+      </ActualMenu>
+    );
+  }
+}
 
-  console.log(window.innerWidth);
+function Menu() {
+  const [whatIsShown, setWhatIsShown] = useState('ALL' as whatCanBeShown);
+  const navigate = useNavigate();
+
   return (
     <Main>
       <Header>
         <HeaderLogo src={logo} onClick={() => navigate(`${BASE_URL}/`)} />
-        <NavigationButton onClick={() => setWhatIsShown('all')}>
+        <NavigationButton onClick={() => setWhatIsShown('ALL')}>
           ALL
         </NavigationButton>
-        <NavigationButton onClick={() => setWhatIsShown('food')}>
+        <NavigationButton onClick={() => setWhatIsShown('FOOD')}>
           FOOD
         </NavigationButton>
-        <NavigationButton onClick={() => setWhatIsShown('coffee')}>
+        <NavigationButton onClick={() => setWhatIsShown('DRINK')}>
           COFFEE
         </NavigationButton>
         <Spacer />
@@ -394,33 +376,7 @@ function Menu() {
         <Title>COFFEE IS</Title>
         <Title>A HUG IN A MUG</Title>
       </TitleContainer>
-      <ActualMenu>
-        {shownMenuContent.map((menuItem) => {
-          return (
-            <MenuItemCard>
-              <MenuItemImage src={images[menuItem.imageId]} />
-              <MenuItemTitle>{menuItem.name}</MenuItemTitle>
-              <CompositionContainer>
-                {menuItem.composition === undefined
-                  ? null
-                  : menuItem.composition.map((menuItemComposition) => {
-                      return (
-                        <EndToEndTextContainer>
-                          <p>{menuItemComposition.name}</p>
-                          <Spacer />
-                          <p>{menuItemComposition.percentage}%</p>
-                        </EndToEndTextContainer>
-                      );
-                    })}
-              </CompositionContainer>
-              <Spacer />
-              {priceMaker(menuItem.price)}
-              <AddToBasketButton>ADD TO BASKET</AddToBasketButton>
-            </MenuItemCard>
-          );
-        })}
-      </ActualMenu>
-
+      <CoreMenu whatIsShown={whatIsShown} />
       <Footer />
     </Main>
   );

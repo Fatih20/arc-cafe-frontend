@@ -1,6 +1,4 @@
 import axios from 'axios';
-import { useMutation } from 'react-query';
-
 
 export const BASE_URL = 'https://arc.arsaizdihar.me/api/';
 
@@ -25,4 +23,8 @@ export async function logout() {
     return await axios
       .post(BASE_URL + 'auth/logout', { }, OPTIONS)
       .then((res) => res.data);
+}
+
+export async function getMenus(){
+  return await axios.get(BASE_URL + '/menus/', {}).then((res) => res.data);
 }
