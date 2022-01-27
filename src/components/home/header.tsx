@@ -96,7 +96,7 @@ function Header() {
           MENU
         </NavigationButton>
       </Navigation>
-      <LogoButton onClick={handleAccessingCart}>
+      <LogoButton onClick={() => navigate(`${BASE_URL}/basket/`)}>
         <HeaderLogo src={cartLogo} />
       </LogoButton>
     </Main>
