@@ -1,8 +1,20 @@
 import { ICartItem } from "../types";
-import { menuItemIdentity } from "../types";
+import { menuItemIdentity, boughtItems } from "../types";
 
 
-export function boughtItemsCreator () {
+export function boughtItemsArrayCreator (cart : ICartItem[]) {
+    const uniqueItemsSet = createItemsSet(cart, ["name", "price"])
+    let boughtItemsArray : boughtItems[] = Array.from(uniqueItemsSet).map((uniqueItemInformation) => {
+        const[uniqueItemName, uniqueItemPriceInString ] = uniqueItemInformation.split("|||");
+        return {
+            name : uniqueItemName,
+            price : parseInt(uniqueItemPriceInString),
+            amount : cart.filter(
+                (menuItems) => menuItems.menu.name === uniqueItemName
+              ).length
+        }
+    })
+    return boughtItemsArray;
 
 }
 

@@ -9,6 +9,7 @@ import { deleteFromCart } from '../utils/api';
 import { useMutation, useQueryClient } from 'react-query';
 import { ICartItem } from '../types';
 import { regroupItemsWrapper, updateItemsSet } from '../utils/commonFunction';
+import { BASE_URL } from '../routes';
 
 interface ICartItemProps {
   uniqueItemName: string;
@@ -126,8 +127,8 @@ export default function Basket() {
   const navigate = useNavigate();
   const { cart, isLoading } = useCart(navigate);
   const [itemsSet, setItemsSet] = useState(new Set([] as string[]));
-  const [justLoaded, setJustLoaded] = useState(false);
   const [groupedItems, setGroupedItems] = useState({} as any);
+  const [justLoaded, setJustLoaded] = useState(false);
   const previousLoading = useRef(true);
   const queryClient = useQueryClient();
 
@@ -219,7 +220,9 @@ export default function Basket() {
             );
           })}
         </ActualBasket>
-        <CheckOutButton>Go To Checkout</CheckOutButton>
+        <CheckOutButton onClick={() => navigate(`${BASE_URL}/checkout`)}>
+          Go To Checkout
+        </CheckOutButton>
       </Main>
     );
   }

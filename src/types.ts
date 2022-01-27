@@ -23,3 +23,10 @@ export interface IMenu {
 }
 
 export type menuItemIdentity = "name" | "id" | "price";
+
+export type boughtItems = {
+    amount: number;
+    name: string;
+    price: number;
+  };
+  
