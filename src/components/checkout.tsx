@@ -4,6 +4,7 @@ import { useRef, useState } from 'react';
 import useCart from '../customHooks/useCart';
 import { boughtItems } from '../types';
 import { boughtItemsArrayCreator } from '../utils/commonFunction';
+import useMe from '../customHooks/useMe';
 
 import { BASE_URL } from '../routes';
 
@@ -226,7 +227,8 @@ const ActualTotalPrice = styled.h2`
 
 export default function Checkout() {
   const navigate = useNavigate();
-  const { cart, isLoading } = useCart(navigate);
+  const { cart, isLoading: cartIsLoading } = useCart(navigate);
+  const { user, isLoading: userIsLoading, error } = useMe();
   const [itemsSet, setItemsSet] = useState(new Set([] as string[]));
   const [groupedItems, setGroupedItems] = useState({} as any);
   const [orders, setOrders] = useState([] as boughtItems[]);
@@ -271,7 +273,7 @@ export default function Checkout() {
     }
   }
 
-  if (isLoading) {
+  if (cartIsLoading || userIsLoading) {
     previousLoading.current = true;
     changeJustLoaded(true);
     return (
@@ -281,6 +283,7 @@ export default function Checkout() {
       </Main>
     );
   } else {
+    console.log(user);
     changeJustLoaded(false);
     if (justLoaded !== previousLoading.current) {
       previousLoading.current = true;
@@ -305,27 +308,25 @@ export default function Checkout() {
             <EndToEndTextContainer>
               <FormattedShortText>Bar</FormattedShortText>
               <Spacer />
-              <FormattedShortText>Ditra</FormattedShortText>
+              <FormattedShortText>
+                {user ? user.name.split(' ')[0] : null}
+              </FormattedShortText>
             </EndToEndTextContainer>
             <CoreBill>
-              {isLoading
-                ? null
-                : orders.map(({ name, price, amount }) => {
-                    return (
-                      <RowContainer>
-                        <ItemsBoughtName>
-                          {amount}x {name}
-                        </ItemsBoughtName>
-                        <ItemsBoughtPrice>
-                          @ {periodInserted(price)}
-                        </ItemsBoughtPrice>
-                        <Currency>IDR</Currency>
-                        <TotalPrice>
-                          {periodInserted(amount * price)}
-                        </TotalPrice>
-                      </RowContainer>
-                    );
-                  })}
+              {orders.map(({ name, price, amount }) => {
+                return (
+                  <RowContainer>
+                    <ItemsBoughtName>
+                      {amount}x {name}
+                    </ItemsBoughtName>
+                    <ItemsBoughtPrice>
+                      @ {periodInserted(price)}
+                    </ItemsBoughtPrice>
+                    <Currency>IDR</Currency>
+                    <TotalPrice>{periodInserted(amount * price)}</TotalPrice>
+                  </RowContainer>
+                );
+              })}
               <RowContainer>
                 <Dashes>- - - - - - - - - -</Dashes>
               </RowContainer>
@@ -359,8 +360,8 @@ export default function Checkout() {
             <FormattedShortText>coffeehour@cafe.co.id</FormattedShortText>
           </GridContainer>
           <GridContainer isProfile={true} column="2/3" row="1/2">
-            <Name>DITRA AMADIA</Name>
-            <FormattedShortText>ditraamadia@gmail.com</FormattedShortText>
+            <Name>{user ? user.name : null}</Name>
+            <FormattedShortText>{user ? user.email : null}</FormattedShortText>
             <FormattedShortText>082320881088</FormattedShortText>
             <FormattedShortText>
               Jl. Setra Dago No.27 Arcamanik
@@ -372,22 +373,28 @@ export default function Checkout() {
             <EndToEndTextContainer>
               <FormattedShortText>Subtotal</FormattedShortText>
               <Spacer />
-              <FormattedShortText>Amount</FormattedShortText>
+              <FormattedShortText>
+                {periodInserted(totalPrice)}
+              </FormattedShortText>
             </EndToEndTextContainer>
             <EndToEndTextContainer>
               <FormattedShortText>Shipping</FormattedShortText>
               <Spacer />
-              <FormattedShortText>Amount</FormattedShortText>
+              <FormattedShortText>
+                {periodInserted(shipping)}
+              </FormattedShortText>
             </EndToEndTextContainer>
             <EndToEndTextContainer>
               <FormattedShortText>Tax</FormattedShortText>
               <Spacer />
-              <FormattedShortText>Amount</FormattedShortText>
+              <FormattedShortText>{periodInserted(taxed)}</FormattedShortText>
             </EndToEndTextContainer>
             <EndToEndTextContainer isTotal={true}>
               <FormattedShortText>Total</FormattedShortText>
               <Spacer />
-              <FormattedShortText>Amount</FormattedShortText>
+              <FormattedShortText>
+                {periodInserted(totalWithTax)}
+              </FormattedShortText>
             </EndToEndTextContainer>
             <BackButton onClick={processCheckout}>CHECKOUT</BackButton>
           </GridContainer>
