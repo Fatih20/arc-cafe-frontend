@@ -8,7 +8,7 @@ import { deleteFromCart } from '../utils/api';
 
 import { useMutation, useQueryClient } from 'react-query';
 import { ICartItem } from '../types';
-import { regroupItems, updateItemsSet } from '../utils/commonFunction';
+import { regroupItemsWrapper, updateItemsSet } from '../utils/commonFunction';
 
 interface ICartItemProps {
   uniqueItemName: string;
@@ -154,7 +154,7 @@ export default function Basket() {
   }
 
   useEffect(() => {
-    regroupItems(cart, itemsSet, setGroupedItems);
+    regroupItemsWrapper(cart, itemsSet, setGroupedItems);
   }, [itemsSet]);
 
   if (isLoading) {
@@ -169,7 +169,7 @@ export default function Basket() {
     changeJustLoaded(false);
     if (justLoaded !== previousLoading.current) {
       previousLoading.current = true;
-      updateItemsSet(cart, setItemsSet);
+      updateItemsSet(cart, ['name', 'id'], setItemsSet);
     }
 
     // console.log(groupedItems);

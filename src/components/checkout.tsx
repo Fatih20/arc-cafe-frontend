@@ -1,5 +1,7 @@
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import useCart from '../customHooks/useCart';
 
 import { BASE_URL } from '../routes';
 
@@ -228,6 +230,10 @@ const ActualTotalPrice = styled.h2`
 
 export default function Checkout() {
   const navigate = useNavigate();
+  const { cart, isLoading } = useCart(navigate);
+  const [itemsSet, setItemsSet] = useState(new Set([] as string[]));
+  const [groupedItems, setGroupedItems] = useState({} as any);
+  const [boughtItems, setBoughtItems] = useState([] as boughtItems[]);
 
   const orders: boughtItems[] = [
     { name: 'Flat White', price: 23000, amount: 1 },
@@ -287,18 +293,22 @@ export default function Checkout() {
             <FormattedShortText>Ditra</FormattedShortText>
           </EndToEndTextContainer>
           <CoreBill>
-            {orders.map(({ name, price, amount }) => {
-              return (
-                <RowContainer>
-                  <ItemsBoughtName>
-                    {amount}x {name}
-                  </ItemsBoughtName>
-                  <ItemsBoughtPrice>@ {periodInserted(price)}</ItemsBoughtPrice>
-                  <Currency>IDR</Currency>
-                  <TotalPrice>{periodInserted(amount * price)}</TotalPrice>
-                </RowContainer>
-              );
-            })}
+            {isLoading
+              ? null
+              : orders.map(({ name, price, amount }) => {
+                  return (
+                    <RowContainer>
+                      <ItemsBoughtName>
+                        {amount}x {name}
+                      </ItemsBoughtName>
+                      <ItemsBoughtPrice>
+                        @ {periodInserted(price)}
+                      </ItemsBoughtPrice>
+                      <Currency>IDR</Currency>
+                      <TotalPrice>{periodInserted(amount * price)}</TotalPrice>
+                    </RowContainer>
+                  );
+                })}
             <RowContainer>
               <Dashes>- - - - - - - - - -</Dashes>
             </RowContainer>

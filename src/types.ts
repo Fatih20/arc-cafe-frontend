@@ -21,3 +21,5 @@ export interface IMenu {
     type : "DRINK" | "FOOD",
     composition : object
 }
+
+export type menuItemIdentity = "name" | "id" | "price";
