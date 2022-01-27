@@ -1,4 +1,6 @@
 import styled from 'styled-components';
+import { logout } from '../../utils/api';
+import { useQueryClient, useMutation } from 'react-query';
 
 import instagramLogo from '../../assets/instagram.png';
 import twitterLogo from '../../assets/twitter.png';
@@ -63,7 +65,14 @@ const BottomCopyright = styled.p`
   font-size: 0.7rem;
 `;
 
+const LogoutButton = styled.button``;
+
 function Footer() {
+  const queryClient = useQueryClient();
+
+  const { mutateAsync: logoutAndRefetch } = useMutation(logout, {
+    onSuccess: () => queryClient.invalidateQueries('me'),
+  });
   return (
     <Main>
       <MostWrapper>
@@ -92,6 +101,7 @@ function Footer() {
         </SectionContainer>
       </MostWrapper>
       <BottomCopyright>&copy; 2022 | COFFEEHOUR</BottomCopyright>
+      <LogoutButton onClick={() => logoutAndRefetch()}>Sign Out</LogoutButton>
     </Main>
   );
 }

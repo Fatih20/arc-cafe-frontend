@@ -1,10 +1,6 @@
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
-import { logout } from '../../utils/api';
-import { useQueryClient, useMutation } from 'react-query';
 import { useIsLoggedIn } from '../../context/isLoggedIn';
-
-import { getItemsInCart } from '../../utils/api';
 
 import blackLogo from '../../assets/coffeehour_black.png';
 import cartLogo from '../../assets/shopping-bag-cropped.png';
@@ -44,17 +40,8 @@ const NavigationButton = styled.a`
 `;
 
 function Header() {
-  const queryClient = useQueryClient();
   const isLoggedIn = useIsLoggedIn();
   const navigate = useNavigate();
-
-  const { mutateAsync: logoutAndRefetch } = useMutation(logout, {
-    onSuccess: () => queryClient.invalidateQueries('me'),
-  });
-
-  async function handleLogout() {
-    logoutAndRefetch();
-  }
 
   function navigateToHome() {
     navigate(`${BASE_URL}/`);
@@ -62,22 +49,6 @@ function Header() {
 
   function navigateToMenu() {
     navigate(`${BASE_URL}/menu`);
-  }
-
-  async function handleAccessingCart() {
-    try {
-      console.log(isLoggedIn);
-      const userCart = await getItemsInCart();
-      console.log(userCart);
-    } catch (error) {
-      let message = 'Unknown error';
-      if (error instanceof Error) {
-        message = error.message;
-        if (message === 'Request failed with status code 401') {
-          navigate(`${BASE_URL}/signup/`);
-        }
-      }
-    }
   }
 
   return (

@@ -1,11 +1,9 @@
-import { group } from 'console';
 import { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import useCart from '../customHooks/useCart';
 import useAddToCartIfLoggedIn from '../utils/addToCartIfLoggedIn';
 import useDeleteFromCartIfLoggedIn from '../utils/deleteFromCartIfLoggedIn';
-import { deleteFromCart } from '../utils/api';
 
 import { useMutation, useQueryClient } from 'react-query';
 import { ICartItem } from '../types';
@@ -142,7 +140,14 @@ function CartItem({
         <AddRemoveButton onClick={() => setValue((prevValue) => prevValue - 1)}>
           -
         </AddRemoveButton>
-        <AmountField value={value} type={'number'} min={0} />
+        <AmountField
+          value={value}
+          type={'number'}
+          step={1}
+          min={0}
+          max={50}
+          readOnly={true}
+        />
         <AddRemoveButton onClick={() => setValue((prevValue) => prevValue + 1)}>
           +
         </AddRemoveButton>
