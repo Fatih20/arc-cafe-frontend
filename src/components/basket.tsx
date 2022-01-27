@@ -8,6 +8,7 @@ import { deleteFromCart } from '../utils/api';
 
 import { useMutation, useQueryClient } from 'react-query';
 import { ICartItem } from '../types';
+import { regroupItems, updateItemsSet } from '../utils/commonFunction';
 
 interface ICartItemProps {
   uniqueItemName: string;
@@ -146,36 +147,14 @@ export default function Basket() {
     }
   );
 
-  function updateItemsSet() {
-    cart.forEach((cartItem) => {
-      setItemsSet((prevItemsSet) => {
-        prevItemsSet.add(
-          `${cartItem.menu.name.toString()}|||${cartItem.menu.id.toString()}`
-        );
-        return prevItemsSet;
-      });
-    });
-  }
-
   function changeJustLoaded(isActuallyLoading: boolean) {
     if (justLoaded === isActuallyLoading) {
       setJustLoaded((prevJustLoaded) => !prevJustLoaded);
     }
   }
 
-  function regroupItems() {
-    let intermediateGroupedItems = {} as any;
-    itemsSet.forEach((uniqueItemNameAndId) => {
-      const [uniqueItemName, uniqueItemId] = uniqueItemNameAndId.split('|||');
-      intermediateGroupedItems[uniqueItemName] = cart.filter(
-        (menuItems) => menuItems.menu.name === uniqueItemName
-      );
-    });
-    setGroupedItems(intermediateGroupedItems);
-  }
-
   useEffect(() => {
-    regroupItems();
+    regroupItems(cart, itemsSet, setGroupedItems);
   }, [itemsSet]);
 
   if (isLoading) {
@@ -190,7 +169,7 @@ export default function Basket() {
     changeJustLoaded(false);
     if (justLoaded !== previousLoading.current) {
       previousLoading.current = true;
-      updateItemsSet();
+      updateItemsSet(cart, setItemsSet);
     }
 
     // console.log(groupedItems);
