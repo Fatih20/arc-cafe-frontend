@@ -242,7 +242,7 @@ export default function Checkout() {
   }
 
   const totalPrice = orders.reduce(
-    (previousSum, { price }) => previousSum + price,
+    (previousSum, { amount, price }) => previousSum + amount * price,
     0
   );
 
@@ -260,17 +260,29 @@ export default function Checkout() {
   function periodInserted(unPeriodedPrice: number) {
     const stringifiedPrice = unPeriodedPrice.toFixed(0);
     if (stringifiedPrice.length > 3) {
-      return (
-        stringifiedPrice.slice(0, stringifiedPrice.length - 3) +
-        '.' +
-        stringifiedPrice.slice(
-          stringifiedPrice.length - 3,
-          stringifiedPrice.length
-        )
-      );
+      let nthDigit = 0;
+      let lengthBackward = stringifiedPrice.length - 1;
+      let convertedPrice: string[] = [];
+      stringifiedPrice.split('').forEach(() => {
+        convertedPrice.push(stringifiedPrice[lengthBackward]);
+        nthDigit = nthDigit + 1;
+        if (nthDigit === 3) {
+          if (lengthBackward !== 0) {
+            nthDigit = 0;
+            convertedPrice.push('.');
+          }
+        }
+        lengthBackward = lengthBackward - 1;
+      });
+
+      convertedPrice.reverse();
+
+      return convertedPrice.join('');
     } else {
       return stringifiedPrice;
     }
+
+    return stringifiedPrice;
   }
 
   if (cartIsLoading || userIsLoading) {

@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import useCart from '../customHooks/useCart';
 import useAddToCartIfLoggedIn from '../utils/addToCartIfLoggedIn';
+import useDeleteFromCartIfLoggedIn from '../utils/deleteFromCartIfLoggedIn';
 import { deleteFromCart } from '../utils/api';
 
 import { useMutation, useQueryClient } from 'react-query';
@@ -13,8 +14,10 @@ import { BASE_URL } from '../routes';
 
 interface ICartItemProps {
   uniqueItemName: string;
+  uniqueItemId: string;
   initialAmount: number;
-  // setAmount: () => void;
+  functionToSubtract: () => void;
+  functionToAdd: () => void;
 }
 
 const Main = styled.div`
@@ -108,16 +111,41 @@ const Spacer = styled.div`
   }
 `;
 
-function CartItem({ uniqueItemName, initialAmount }: ICartItemProps) {
+function CartItem({
+  uniqueItemName,
+  initialAmount,
+  functionToAdd,
+  functionToSubtract,
+}: ICartItemProps) {
   const [value, setValue] = useState(initialAmount);
+  const previousValue = useRef(initialAmount);
+
+  useEffect(() => {
+    if (previousValue.current >= value) {
+      while (previousValue.current !== value) {
+        previousValue.current = previousValue.current - 1;
+        functionToSubtract();
+      }
+    } else {
+      while (previousValue.current !== value) {
+        previousValue.current = previousValue.current + 1;
+        functionToAdd();
+      }
+    }
+  }, [value]);
+
   return (
     <BasketItemMain>
       <BasketItemTitle>{uniqueItemName}</BasketItemTitle>
       <Spacer />
       <AmountContainer>
-        <AddRemoveButton>-</AddRemoveButton>
-        <AmountField value={value} />
-        <AddRemoveButton>+</AddRemoveButton>
+        <AddRemoveButton onClick={() => setValue((prevValue) => prevValue - 1)}>
+          -
+        </AddRemoveButton>
+        <AmountField value={value} type={'number'} min={0} />
+        <AddRemoveButton onClick={() => setValue((prevValue) => prevValue + 1)}>
+          +
+        </AddRemoveButton>
       </AmountContainer>
     </BasketItemMain>
   );
@@ -133,16 +161,17 @@ export default function Basket() {
   const queryClient = useQueryClient();
 
   const { addToCartIfLoggedIn } = useAddToCartIfLoggedIn(navigate);
+  const { deleteFromCartIfLoggedIn } = useDeleteFromCartIfLoggedIn(navigate);
 
-  const { mutateAsync: addToBasketAndUpdateCart } = useMutation(
+  const { mutateAsync: addToBasketAndUpdate } = useMutation(
     addToCartIfLoggedIn,
     {
       onSuccess: () => queryClient.invalidateQueries('cart'),
     }
   );
 
-  const { mutateAsync: deleteFromBasketAndUpdateCart } = useMutation(
-    deleteFromCart,
+  const { mutateAsync: deleteFromBasketAndUpdate } = useMutation(
+    deleteFromCartIfLoggedIn,
     {
       onSuccess: () => queryClient.invalidateQueries('cart'),
     }
@@ -186,37 +215,17 @@ export default function Basket() {
             return (
               <CartItem
                 uniqueItemName={uniqueItemName}
+                uniqueItemId={uniqueItemId}
+                functionToAdd={() => addToBasketAndUpdate(uniqueItemId)}
+                functionToSubtract={() =>
+                  deleteFromBasketAndUpdate(uniqueItemId)
+                }
                 initialAmount={
                   cart.filter(
                     (menuItem) => menuItem.menu.name === uniqueItemName
                   ).length
                 }
               />
-              // <BasketItem>
-              //   <h3>{uniqueItemName}</h3>
-              //   <button
-              //     onClick={() => {
-              //       deleteFromBasketAndUpdateCart(
-              //         groupedItems[uniqueItemName][
-              //           groupedItems[uniqueItemName].length - 1
-              //         ].id
-              //       );
-              //       regroupItems();
-              //     }}
-              //   >
-              //     minus
-              //   </button>
-              //   <p>
-              //     {
-              //       cart.filter((menuItem) => {
-              //         return menuItem.menu.name === uniqueItemName;
-              //       }).length
-              //     }
-              //   </p>
-              //   <button onClick={() => addToBasketAndUpdateCart(uniqueItemId)}>
-              //     plus
-              //   </button>
-              // </BasketItem>
             );
           })}
         </ActualBasket>
