@@ -240,7 +240,10 @@ export default function Basket() {
           <ContainerForEmptyCartText>
             <EmptyCartText>Delicious Coffee Not Found.</EmptyCartText>
           </ContainerForEmptyCartText>
-          <CheckOutButton display={true}>
+          <CheckOutButton
+            display={true}
+            onClick={() => navigate(`${BASE_URL}/menu`)}
+          >
             Go To Our Menu To Buy Them!
           </CheckOutButton>
         </Main>

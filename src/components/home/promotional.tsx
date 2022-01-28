@@ -3,6 +3,8 @@ import styled from 'styled-components';
 import promotionalBackground from '../../assets/header-bg.jpg';
 import coffeeImage from '../../assets/header-cropped.png';
 import coffeeHour from '../../assets/coffeehour.png';
+import { useNavigate } from 'react-router-dom';
+import { BASE_URL } from '../../routes';
 
 const Main = styled.div`
   align-items: center;
@@ -126,6 +128,7 @@ const CoffeeLogo = styled.img`
 `;
 
 function Promotional() {
+  const navigate = useNavigate();
   return (
     <Main>
       <BackgroundImageMask />
@@ -136,7 +139,9 @@ function Promotional() {
           A cup of coffee lasts only a moment, but it is that moment that makes
           your day better.
         </SmallParagraph>
-        <ViewMenu>VIEW MENU</ViewMenu>
+        <ViewMenu onClick={() => navigate(`${BASE_URL}/menu`)}>
+          VIEW MENU
+        </ViewMenu>
       </TextContainer>
       <CoffeeImage src={coffeeImage} />
       <LogoContainer>
