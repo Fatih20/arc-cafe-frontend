@@ -1,12 +1,12 @@
 import { BASE_URL } from '../routes';
-import { addToCart } from './api';
+import { deleteFromCart } from './api';
 
 export default function useDeleteFromCartIfLoggedIn(
   navigateFunction: (path: string) => void
 ) {
   async function deleteFromCartIfLoggedIn(menuId: string) {
     try {
-      await addToCart(menuId);
+      await deleteFromCart(menuId);
     } catch (error) {
       let message = 'Unknown error';
       if (error instanceof Error) {

@@ -225,10 +225,9 @@ export default function Basket() {
                 uniqueItemId={uniqueItemId}
                 functionToAdd={async () => {
                   await addToBasketAndUpdate(uniqueItemId);
-                  console.log("Should've been invalidated")
                 }}
-                functionToSubtract={() =>
-                  deleteFromBasketAndUpdate(uniqueItemId)
+                functionToSubtract={async () =>
+                  await deleteFromBasketAndUpdate(uniqueItemId)
                 }
                 initialAmount={
                   cart.filter(
