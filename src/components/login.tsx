@@ -6,6 +6,7 @@ import { login, register } from '../utils/api';
 import coffeeHour from '../assets/coffeehour.png';
 
 import { BASE_URL } from '../routes';
+import { useQueryClient } from 'react-query';
 
 const Main = styled.div`
   align-items: center;
@@ -87,13 +88,13 @@ function LogIn() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
-  const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
+  const queryClient = useQueryClient();
+  const handleSubmit: React.FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
-    login(email, password)
-      .then(() => navigate(`${BASE_URL}`))
-      .catch((err) => {
-        console.log(err);
-      });
+    await login(email, password);
+    await queryClient.invalidateQueries();
+    window.scrollTo(0, 0);
+    navigate(`${BASE_URL}`);
   };
   return (
     <>

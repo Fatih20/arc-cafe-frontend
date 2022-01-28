@@ -1,6 +1,8 @@
 import styled from 'styled-components';
 import { logout } from '../../utils/api';
 import { useQueryClient, useMutation } from 'react-query';
+import { useNavigate } from 'react-router-dom';
+import { BASE_URL } from '../../routes';
 
 import instagramLogo from '../../assets/instagram.png';
 import twitterLogo from '../../assets/twitter.png';
@@ -69,13 +71,13 @@ const LogoutButton = styled.button``;
 
 function Footer() {
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
   const { mutateAsync: logoutAndRefetch } = useMutation(logout, {
-    onSuccess: async() => {
-      queryClient.invalidateQueries('me');
-      queryClient.invalidateQueries('cart');
+    onSuccess: async () => {
+      await queryClient.invalidateQueries();
     },
   });
-  
+
   return (
     <Main>
       <MostWrapper>
@@ -104,10 +106,16 @@ function Footer() {
         </SectionContainer>
       </MostWrapper>
       <BottomCopyright>&copy; 2022 | COFFEEHOUR</BottomCopyright>
-      <LogoutButton onClick={async () => {
-        await logoutAndRefetch()
-        console.log("Should've been invalidated");
-      }}>Sign Out</LogoutButton>
+      <LogoutButton
+        onClick={async () => {
+          await logoutAndRefetch();
+          window.scrollTo(0, 0);
+          navigate(`${BASE_URL}`);
+          // console.log("Should've been invalidated");
+        }}
+      >
+        Sign Out
+      </LogoutButton>
     </Main>
   );
 }

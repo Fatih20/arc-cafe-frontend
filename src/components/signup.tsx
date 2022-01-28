@@ -5,6 +5,7 @@ import { register } from '../utils/api';
 
 import coffeeHour from '../assets/coffeehour.png';
 import { BASE_URL } from '../routes';
+import { useQueryClient } from 'react-query';
 
 const Main = styled.div`
   align-items: center;
@@ -87,13 +88,14 @@ function SignUp() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
-  const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
+  const handleSubmit: React.FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
-
-    register(name, email, password).then(() => {
-      navigate(`${BASE_URL}`);
-    });
+    await register(name, email, password);
+    await queryClient.invalidateQueries();
+    window.scrollTo(0, 0);
+    navigate(`${BASE_URL}`);
   };
   return (
     <>
