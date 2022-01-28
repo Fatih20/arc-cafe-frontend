@@ -19,7 +19,7 @@ interface ICartItemProps {
   functionToAdd: () => void;
 }
 
-interface IBasketItemMainProps {
+interface IHideInCertainCondition {
   display: boolean
 }
 
@@ -48,6 +48,19 @@ const Title = styled.h2`
   }
 `;
 
+const Subtitle = styled.h3`
+  color: #8c7466;
+  font-weight: 800;
+  font-size: 1.25em;
+  margin-bottom: 0.5rem;
+  text-align: center;
+
+  @media (min-width: 600px) {
+    font-size: 2em;
+  }
+`;
+
+
 const ActualBasket = styled.div`
   display: flex;
   flex-direction: column;
@@ -55,7 +68,7 @@ const ActualBasket = styled.div`
   margin-bottom: 1rem;
 `;
 
-const BasketItemMain = styled.div<IBasketItemMainProps>`
+const BasketItemMain = styled.div<IHideInCertainCondition>`
   align-items: center;
   background-color: #fff;
   color: #8c7466;
@@ -96,10 +109,11 @@ const AddRemoveButton = styled.button`
   border-radius: 0.1rem;
 `;
 
-const CheckOutButton = styled.button`
+const CheckOutButton = styled.button<IHideInCertainCondition>`
   background-color: #95c79d;
   border-radius: 0.1rem;
   color: white;
+  display: ${({display}) => display ? "initial" : "none"};
   font-size: 1em;
   font-weight: 900;
   margin: 0.5rem 0 0 0;
@@ -113,6 +127,7 @@ const Spacer = styled.div`
     flex-grow: 1;
   }
 `;
+
 
 function CartItem({
   uniqueItemName,
@@ -194,6 +209,19 @@ export default function Basket() {
     }
   }
 
+  function titleGenerator (){
+    if (cart.length === 0) {
+      return (
+        <>
+        <Title>YOUR BASKET IS EMPTY</Title>
+        <Subtitle>GO BUY SOME DELICIOUS COFFEE!</Subtitle>
+        </>
+        )
+    } else {
+      return <Title>YOUR BASKET</Title>
+    }
+  }
+
   useEffect(() => {
     regroupItemsWrapper(cart, itemsSet, setGroupedItems);
   }, [itemsSet]);
@@ -217,7 +245,7 @@ export default function Basket() {
 
     return (
       <Main>
-        <Title>YOUR BASKET</Title>
+        {titleGenerator()}
         <ActualBasket>
           {Array.from(itemsSet).map((uniqueItemNameAndId) => {
             const [uniqueItemName, uniqueItemId] =
@@ -242,7 +270,7 @@ export default function Basket() {
             );
           })}
         </ActualBasket>
-        <CheckOutButton onClick={() => navigate(`${BASE_URL}/checkout`)}>
+        <CheckOutButton display={cart.length === 0 ? false : true} onClick={() => navigate(`${BASE_URL}/checkout`)}>
           Go To Checkout
         </CheckOutButton>
       </Main>
