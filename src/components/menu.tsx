@@ -26,6 +26,10 @@ interface ICoreMenuProps {
   whatIsShown: whatCanBeShown;
 }
 
+interface IBasketCounterProps { 
+  display : boolean;
+}
+
 const images = [espresso, cappuccino, flatWhite, fries, macaron];
 
 const Main = styled.div`
@@ -97,14 +101,14 @@ const Spacer = styled.div`
   flex-grow: 1;
 `;
 
-const BasketCounter = styled.div`
+const BasketCounter = styled.div<IBasketCounterProps>`
   align-items: center;
   aspect-ratio: 1/1;
   background-color: #f27070;
   border-radius: 50%;
   box-sizing: border-box;
   color: white;
-  display: flex;
+  display: ${({display}) => display ? "flex" : "none"};
   height: auto;
   justify-content: center;
   width: 1rem;
@@ -382,7 +386,7 @@ function Menu() {
         </NavigationButton>
         <Spacer />
         <NavigationButton onClick={() => navigate(`${BASE_URL}/basket`)}>
-          <BasketCounter>
+          <BasketCounter display={isLoading || cart.length === 0 ? false : true}>
             <p>{isLoading ? null : cart.length}</p>
           </BasketCounter>
           MY BASKET

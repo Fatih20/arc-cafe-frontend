@@ -69,14 +69,11 @@ const LogoutButton = styled.button``;
 
 function Footer() {
   const queryClient = useQueryClient();
-
-  // async function logoutAndRefetch() {
-  //   await logout();
-  //   queryClient.invalidateQueries('me');
-  // }
-
   const { mutateAsync: logoutAndRefetch } = useMutation(logout, {
-    onSuccess: () => queryClient.invalidateQueries('me'),
+    onSuccess: async() => {
+      queryClient.invalidateQueries('me');
+      queryClient.invalidateQueries('cart');
+    },
   });
   
   return (

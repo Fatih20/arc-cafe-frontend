@@ -10,7 +10,8 @@ export default function useCart(navigateFunction: (path: string) => void) {
   if (error instanceof Error) {
     message = error.message;
     if (message === 'Request failed with status code 401') {
-      navigateFunction(`${BASE_URL}/signup/`);
+      return { cart : [] as ICartItem[], isLoading: false}
+      // navigateFunction(`${BASE_URL}/signup/`);
     }
   }
   return { cart: data as ICartItem[], isLoading };
