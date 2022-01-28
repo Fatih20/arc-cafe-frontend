@@ -20,12 +20,13 @@ interface ICartItemProps {
 }
 
 interface IHideInCertainCondition {
-  display: boolean
+  display: boolean;
 }
 
 const Main = styled.div`
   display: flex;
   flex-direction: column;
+  flex-grow: 1;
   margin: 0 auto;
   max-width: 300px;
   padding: 1rem;
@@ -34,6 +35,14 @@ const Main = styled.div`
   @media (min-width: 600px) {
     max-width: 450px;
   }
+`;
+
+const ContainerForEmptyCartText = styled(Main)`
+  align-items: center;
+  flex-grow: 1;
+  justify-content: center;
+
+  /* border: solid 1px black; */
 `;
 
 const Title = styled.h2`
@@ -48,18 +57,13 @@ const Title = styled.h2`
   }
 `;
 
-const Subtitle = styled.h3`
-  color: #8c7466;
-  font-weight: 800;
+const EmptyCartText = styled(Title)`
   font-size: 1.25em;
-  margin-bottom: 0.5rem;
-  text-align: center;
-
+  opacity: 0.5;
   @media (min-width: 600px) {
     font-size: 2em;
   }
 `;
-
 
 const ActualBasket = styled.div`
   display: flex;
@@ -74,7 +78,7 @@ const BasketItemMain = styled.div<IHideInCertainCondition>`
   color: #8c7466;
   border: solid 2px #8c7466;
   border-radius: 0.1rem;
-  display: ${({display}) => display ? "flex" : "none"};
+  display: ${({ display }) => (display ? 'flex' : 'none')};
   flex-direction: column;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
   gap: 0.5rem;
@@ -113,7 +117,7 @@ const CheckOutButton = styled.button<IHideInCertainCondition>`
   background-color: #95c79d;
   border-radius: 0.1rem;
   color: white;
-  display: ${({display}) => display ? "initial" : "none"};
+  display: ${({ display }) => (display ? 'initial' : 'none')};
   font-size: 1em;
   font-weight: 900;
   margin: 0.5rem 0 0 0;
@@ -127,7 +131,6 @@ const Spacer = styled.div`
     flex-grow: 1;
   }
 `;
-
 
 function CartItem({
   uniqueItemName,
@@ -209,19 +212,6 @@ export default function Basket() {
     }
   }
 
-  function titleGenerator (){
-    if (cart.length === 0) {
-      return (
-        <>
-        <Title>YOUR BASKET IS EMPTY</Title>
-        <Subtitle>GO BUY SOME DELICIOUS COFFEE!</Subtitle>
-        </>
-        )
-    } else {
-      return <Title>YOUR BASKET</Title>
-    }
-  }
-
   useEffect(() => {
     regroupItemsWrapper(cart, itemsSet, setGroupedItems);
   }, [itemsSet]);
@@ -243,37 +233,54 @@ export default function Basket() {
 
     // console.log(groupedItems);
 
-    return (
-      <Main>
-        {titleGenerator()}
-        <ActualBasket>
-          {Array.from(itemsSet).map((uniqueItemNameAndId) => {
-            const [uniqueItemName, uniqueItemId] =
-              uniqueItemNameAndId.split('|||');
-            // const eachItemsOfTheName = groupedItems[uniqueItemName];
-            return (
-              <CartItem
-                uniqueItemName={uniqueItemName}
-                uniqueItemId={uniqueItemId}
-                functionToAdd={async () => {
-                  await addToBasketAndUpdate(uniqueItemId);
-                }}
-                functionToSubtract={async () =>
-                  await deleteFromBasketAndUpdate(uniqueItemId)
-                }
-                initialAmount={
-                  cart.filter(
-                    (menuItem) => menuItem.menu.name === uniqueItemName
-                  ).length
-                }
-              />
-            );
-          })}
-        </ActualBasket>
-        <CheckOutButton display={cart.length === 0 ? false : true} onClick={() => navigate(`${BASE_URL}/checkout`)}>
-          Go To Checkout
-        </CheckOutButton>
-      </Main>
-    );
+    if (cart.length === 0) {
+      return (
+        <Main>
+          <Title>Your Basket</Title>
+          <ContainerForEmptyCartText>
+            <EmptyCartText>Delicious Coffee Not Found.</EmptyCartText>
+          </ContainerForEmptyCartText>
+          <CheckOutButton display={true}>
+            Go To Our Menu To Buy Them!
+          </CheckOutButton>
+        </Main>
+      );
+    } else {
+      return (
+        <Main>
+          <Title>Your Basket</Title>
+          <ActualBasket>
+            {Array.from(itemsSet).map((uniqueItemNameAndId) => {
+              const [uniqueItemName, uniqueItemId] =
+                uniqueItemNameAndId.split('|||');
+              // const eachItemsOfTheName = groupedItems[uniqueItemName];
+              return (
+                <CartItem
+                  uniqueItemName={uniqueItemName}
+                  uniqueItemId={uniqueItemId}
+                  functionToAdd={async () => {
+                    await addToBasketAndUpdate(uniqueItemId);
+                  }}
+                  functionToSubtract={async () =>
+                    await deleteFromBasketAndUpdate(uniqueItemId)
+                  }
+                  initialAmount={
+                    cart.filter(
+                      (menuItem) => menuItem.menu.name === uniqueItemName
+                    ).length
+                  }
+                />
+              );
+            })}
+          </ActualBasket>
+          <CheckOutButton
+            display={cart.length === 0 ? false : true}
+            onClick={() => navigate(`${BASE_URL}/checkout`)}
+          >
+            Go To Checkout
+          </CheckOutButton>
+        </Main>
+      );
+    }
   }
 }
