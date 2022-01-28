@@ -9,6 +9,7 @@ import { useMutation, useQueryClient } from 'react-query';
 import { ICartItem } from '../types';
 import { regroupItemsWrapper, updateItemsSet } from '../utils/commonFunction';
 import { BASE_URL } from '../routes';
+import useRerouteIfUnauthorized from '../customHooks/useRerouteIfUnauthorized';
 
 interface ICartItemProps {
   uniqueItemName: string;
@@ -164,6 +165,7 @@ export default function Basket() {
   const [justLoaded, setJustLoaded] = useState(false);
   const previousLoading = useRef(true);
   const queryClient = useQueryClient();
+  useRerouteIfUnauthorized(navigate);
 
   const { addToCartIfLoggedIn } = useAddToCartIfLoggedIn(navigate);
   const { deleteFromCartIfLoggedIn } = useDeleteFromCartIfLoggedIn(navigate);
@@ -221,7 +223,10 @@ export default function Basket() {
               <CartItem
                 uniqueItemName={uniqueItemName}
                 uniqueItemId={uniqueItemId}
-                functionToAdd={() => addToBasketAndUpdate(uniqueItemId)}
+                functionToAdd={async () => {
+                  await addToBasketAndUpdate(uniqueItemId);
+                  console.log("Should've been invalidated")
+                }}
                 functionToSubtract={() =>
                   deleteFromBasketAndUpdate(uniqueItemId)
                 }

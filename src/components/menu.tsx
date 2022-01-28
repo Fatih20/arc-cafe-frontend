@@ -343,7 +343,10 @@ function CoreMenu(props: ICoreMenuProps) {
               <Spacer />
               {priceMaker(menuItem.price)}
               <AddToBasketButton
-                onClick={() => addToBasketAndUpdateCart(menuItem.id)}
+                onClick={async () =>{
+                  await addToBasketAndUpdateCart(menuItem.id);
+                  console.log("Cart should've been revalidated")
+                }}
               >
                 ADD TO BASKET
               </AddToBasketButton>

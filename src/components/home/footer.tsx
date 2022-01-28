@@ -70,9 +70,15 @@ const LogoutButton = styled.button``;
 function Footer() {
   const queryClient = useQueryClient();
 
+  // async function logoutAndRefetch() {
+  //   await logout();
+  //   queryClient.invalidateQueries('me');
+  // }
+
   const { mutateAsync: logoutAndRefetch } = useMutation(logout, {
     onSuccess: () => queryClient.invalidateQueries('me'),
   });
+  
   return (
     <Main>
       <MostWrapper>
@@ -101,7 +107,10 @@ function Footer() {
         </SectionContainer>
       </MostWrapper>
       <BottomCopyright>&copy; 2022 | COFFEEHOUR</BottomCopyright>
-      <LogoutButton onClick={() => logoutAndRefetch()}>Sign Out</LogoutButton>
+      <LogoutButton onClick={async () => {
+        await logoutAndRefetch()
+        console.log("Should've been invalidated");
+      }}>Sign Out</LogoutButton>
     </Main>
   );
 }

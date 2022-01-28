@@ -7,6 +7,7 @@ import { boughtItemsArrayCreator } from '../utils/commonFunction';
 import useMe from '../customHooks/useMe';
 
 import { BASE_URL } from '../routes';
+import useRerouteIfUnauthorized from '../customHooks/useRerouteIfUnauthorized';
 
 interface IGridBoxProps {
   column: string;
@@ -234,6 +235,7 @@ export default function Checkout() {
   const [orders, setOrders] = useState([] as boughtItems[]);
   const [justLoaded, setJustLoaded] = useState(false);
   const previousLoading = useRef(true);
+  useRerouteIfUnauthorized(navigate);
 
   function changeJustLoaded(isActuallyLoading: boolean) {
     if (justLoaded === isActuallyLoading) {
@@ -281,8 +283,6 @@ export default function Checkout() {
     } else {
       return stringifiedPrice;
     }
-
-    return stringifiedPrice;
   }
 
   if (cartIsLoading || userIsLoading) {
