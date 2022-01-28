@@ -19,6 +19,10 @@ interface ICartItemProps {
   functionToAdd: () => void;
 }
 
+interface IBasketItemMainProps {
+  display: boolean
+}
+
 const Main = styled.div`
   display: flex;
   flex-direction: column;
@@ -51,13 +55,13 @@ const ActualBasket = styled.div`
   margin-bottom: 1rem;
 `;
 
-const BasketItemMain = styled.div`
+const BasketItemMain = styled.div<IBasketItemMainProps>`
   align-items: center;
   background-color: #fff;
   color: #8c7466;
   border: solid 2px #8c7466;
   border-radius: 0.1rem;
-  display: flex;
+  display: ${({display}) => display ? "flex" : "none"};
   flex-direction: column;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
   gap: 0.5rem;
@@ -134,7 +138,7 @@ function CartItem({
   }, [value]);
 
   return (
-    <BasketItemMain>
+    <BasketItemMain display={value === 0 ? false : true}>
       <BasketItemTitle>{uniqueItemName}</BasketItemTitle>
       <Spacer />
       <AmountContainer>
