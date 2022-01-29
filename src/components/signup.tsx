@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { register } from '../utils/api';
@@ -6,6 +6,10 @@ import { register } from '../utils/api';
 import coffeeHour from '../assets/coffeehour.png';
 import { BASE_URL } from '../routes';
 import { useQueryClient } from 'react-query';
+
+import { IWarningWhenInvalidProps } from '../types';
+
+var approve = require('approvejs');
 
 const Main = styled.div`
   align-items: center;
@@ -84,19 +88,53 @@ const SignInLink = styled.a`
   color: #95c79d;
 `;
 
+const WarningWhenInvalid = styled.p<IWarningWhenInvalidProps>`
+  color: red;
+  display: ${({ valid }) => (valid ? 'none' : 'initial')};
+`;
+
 function SignUp() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const queryClient = useQueryClient();
   const navigate = useNavigate();
+  const emailFieldEverFocused = useRef(true);
+  const passwordFieldEverFocused = useRef(true);
+  const [emailValid, setEmailValid] = useState(true);
+  const [passwordValid, setPasswordValid] = useState(true);
+
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
-    await register(name, email, password);
-    await queryClient.invalidateQueries();
-    window.scrollTo(0, 0);
-    navigate(`${BASE_URL}`);
+    if (emailValid && passwordValid) {
+      try {
+        await register(name, email, password);
+        await queryClient.invalidateQueries();
+        window.scrollTo(0, 0);
+        navigate(`${BASE_URL}`);
+      } catch (error: any) {
+        // let unknownError = 'Unknown error ';
+        console.log(error.response.data);
+        console.log('Form not submitted');
+      }
+    }
   };
+
+  useEffect(() => {
+    if (emailFieldEverFocused.current) {
+      setEmailValid(
+        approve.value(email, { email: true, required: true }).approved
+      );
+    }
+
+    if (passwordFieldEverFocused.current) {
+      if (password.length < 4) {
+        setPasswordValid(false);
+      } else {
+        setPasswordValid(true);
+      }
+    }
+  }, [email, password]);
   return (
     <>
       <Spacer />
@@ -106,27 +144,41 @@ function SignUp() {
             <CoffeeLogo src={coffeeHour} />
             <Title>SIGN UP</Title>
           </TitleContainer>
-          <StyledForm onSubmit={handleSubmit}>
+          <StyledForm onSubmit={handleSubmit} noValidate={true}>
             <StyledInput
               type="text"
               name="name"
               placeholder="Name"
               value={name}
-              onChange={(e) => setName(e.target.value)}
+              onChange={(e) => {
+                setName(e.target.value);
+              }}
             />
+            <WarningWhenInvalid valid={emailValid}>
+              Invalid Email
+            </WarningWhenInvalid>
             <StyledInput
               type="email"
               name="email"
               placeholder="Email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => {
+                emailFieldEverFocused.current = true;
+                setEmail(e.target.value);
+              }}
             />
+            <WarningWhenInvalid valid={passwordValid}>
+              Password must contain more than 4 characters
+            </WarningWhenInvalid>
             <StyledInput
               type="password"
               name="password"
               placeholder="Password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => {
+                passwordFieldEverFocused.current = true;
+                setPassword(e.target.value);
+              }}
             />
             <SubmitButton type="submit">Create Account</SubmitButton>
           </StyledForm>

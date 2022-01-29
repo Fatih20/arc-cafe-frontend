@@ -29,4 +29,9 @@ export type boughtItems = {
     name: string;
     price: number;
   };
+
+export interface IWarningWhenInvalidProps {
+    valid: boolean;
+  }
+  
   

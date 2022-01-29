@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { login, register } from '../utils/api';
@@ -7,6 +7,9 @@ import coffeeHour from '../assets/coffeehour.png';
 
 import { BASE_URL } from '../routes';
 import { useQueryClient } from 'react-query';
+import { IWarningWhenInvalidProps } from '../types';
+
+var approve = require('approvejs');
 
 const Main = styled.div`
   align-items: center;
@@ -84,11 +87,17 @@ const SignInLink = styled.a`
   color: #95c79d;
 `;
 
+const WarningWhenInvalid = styled.p<IWarningWhenInvalidProps>`
+  color: red;
+  display: ${({ valid }) => (valid ? 'none' : 'initial')};
+`;
+
 function LogIn() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
     await login(email, password);
@@ -96,6 +105,7 @@ function LogIn() {
     window.scrollTo(0, 0);
     navigate(`${BASE_URL}`);
   };
+
   return (
     <>
       <Spacer />
