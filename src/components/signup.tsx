@@ -99,8 +99,8 @@ function SignUp() {
   const [password, setPassword] = useState('');
   const queryClient = useQueryClient();
   const navigate = useNavigate();
-  const emailFieldEverFocused = useRef(true);
-  const passwordFieldEverFocused = useRef(true);
+  const emailFieldEverFocused = useRef(false);
+  const passwordFieldEverFocused = useRef(false);
   const [emailValid, setEmailValid] = useState(true);
   const [passwordValid, setPasswordValid] = useState(true);
 
