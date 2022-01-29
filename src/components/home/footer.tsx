@@ -11,7 +11,7 @@ import twitterLogo from '../../assets/twitter.png';
 import coffeeHour from '../../assets/coffeehour.png';
 
 interface ISignOutButton {
-  display: boolean;
+  show: boolean;
 }
 
 const Main = styled.div`
@@ -74,7 +74,7 @@ const BottomCopyright = styled.p`
 `;
 
 const LogoutButton = styled.button<ISignOutButton>`
-  display: ${({ display }) => (display ? 'none' : 'initial')};
+  display: ${({ show }) => (show ? 'initial' : 'none')};
 `;
 
 function Footer() {
@@ -116,7 +116,7 @@ function Footer() {
       </MostWrapper>
       <BottomCopyright>&copy; 2022 | COFFEEHOUR</BottomCopyright>
       <LogoutButton
-        display={error !== null ? true : false}
+        show={error !== null ? true : false}
         onClick={async () => {
           await logoutAndRefetch();
           window.scrollTo(0, 0);
