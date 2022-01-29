@@ -10,6 +10,10 @@ import instagramLogo from '../../assets/instagram.png';
 import twitterLogo from '../../assets/twitter.png';
 import coffeeHour from '../../assets/coffeehour.png';
 
+interface ISignOutButton {
+  display: boolean;
+}
+
 const Main = styled.div`
   align-items: center;
   background-color: #fafafa;
@@ -69,7 +73,9 @@ const BottomCopyright = styled.p`
   font-size: 0.7rem;
 `;
 
-const LogoutButton = styled.button``;
+const LogoutButton = styled.button<ISignOutButton>`
+  display: ${({ display }) => (display ? 'none' : 'initial')};
+`;
 
 function Footer() {
   const queryClient = useQueryClient();
@@ -110,6 +116,7 @@ function Footer() {
       </MostWrapper>
       <BottomCopyright>&copy; 2022 | COFFEEHOUR</BottomCopyright>
       <LogoutButton
+        display={error !== null ? true : false}
         onClick={async () => {
           await logoutAndRefetch();
           window.scrollTo(0, 0);
