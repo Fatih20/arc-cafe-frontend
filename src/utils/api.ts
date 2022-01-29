@@ -40,3 +40,7 @@ export async function getItemsInCart() {
 export async function deleteFromCart (menuId: string){
   return await axios.delete(BASE_URL + `/menus/cart/${menuId}`, OPTIONS).then((res) => res.data)
 }
+
+export async function clearCart (){
+  return await axios.delete(BASE_URL + `/menus/cart/`, OPTIONS).then((res) => res.data)
+}

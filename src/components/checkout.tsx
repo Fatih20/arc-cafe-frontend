@@ -8,6 +8,7 @@ import useMe from '../customHooks/useMe';
 
 import { BASE_URL } from '../routes';
 import useRerouteIfUnauthorized from '../customHooks/useRerouteIfUnauthorized';
+import { clearCart } from '../utils/api';
 
 interface IGridBoxProps {
   column: string;
@@ -255,7 +256,8 @@ export default function Checkout() {
   const taxed = totalWithShipping * 0.1;
   const totalWithTax = totalWithShipping + taxed;
 
-  function processCheckout() {
+  async function processCheckout() {
+    await clearCart();
     navigate(`${BASE_URL}/checked`);
   }
 
