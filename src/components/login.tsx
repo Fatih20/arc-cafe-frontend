@@ -97,13 +97,22 @@ function LogIn() {
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const [emailOrPasswordInvalid, setEmailOrPasswordInvalid] = useState(false);
 
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
-    await login(email, password);
-    await queryClient.invalidateQueries();
-    window.scrollTo(0, 0);
-    navigate(`${BASE_URL}`);
+    try {
+      await login(email, password);
+      await queryClient.invalidateQueries();
+      window.scrollTo(0, 0);
+      navigate(`${BASE_URL}`);
+    } catch (error: any) {
+      console.log(error.response.data);
+      if (error.response.data.message === 'Invalid email or password') {
+        setEmailOrPasswordInvalid(true);
+        setPassword('');
+      }
+    }
   };
 
   return (
@@ -115,6 +124,9 @@ function LogIn() {
             <CoffeeLogo src={coffeeHour} />
             <Title>SIGN IN</Title>
           </TitleContainer>
+          <WarningWhenInvalid valid={!emailOrPasswordInvalid}>
+            Wrong Email or Password
+          </WarningWhenInvalid>
           <StyledForm onSubmit={handleSubmit}>
             <StyledInput
               type="email"
