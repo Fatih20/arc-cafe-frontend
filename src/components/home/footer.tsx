@@ -116,7 +116,7 @@ function Footer() {
       </MostWrapper>
       <BottomCopyright>&copy; 2022 | COFFEEHOUR</BottomCopyright>
       <LogoutButton
-        show={error !== null ? true : false}
+        show={error === null ? true : false}
         onClick={async () => {
           await logoutAndRefetch();
           window.scrollTo(0, 0);
