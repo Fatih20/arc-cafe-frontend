@@ -236,7 +236,7 @@ export default function Checkout() {
   const [orders, setOrders] = useState([] as boughtItems[]);
   const [justLoaded, setJustLoaded] = useState(false);
   const previousLoading = useRef(true);
-  useRerouteIfUnauthorized(navigate);
+  useRerouteIfUnauthorized();
 
   function changeJustLoaded(isActuallyLoading: boolean) {
     if (justLoaded === isActuallyLoading) {

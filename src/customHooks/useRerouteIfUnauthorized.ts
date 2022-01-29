@@ -1,9 +1,11 @@
 import { useEffect } from "react";
 import useMe from "./useMe";
 import { BASE_URL } from "../routes";
+import { useNavigate } from "react-router-dom";
 
-export default function useRerouteIfUnauthorized (navigateFunction : (pathToGo : string) => void){
+export default function useRerouteIfUnauthorized (){
     const {user, isLoading, error} = useMe();
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (!isLoading){
@@ -12,7 +14,7 @@ export default function useRerouteIfUnauthorized (navigateFunction : (pathToGo :
         }
         console.log(error)
         if (error !== null){
-            navigateFunction(`${BASE_URL}/signup`);
+            navigate(`${BASE_URL}/signup`);
         }
     })
 }

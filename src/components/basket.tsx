@@ -187,7 +187,7 @@ export default function Basket() {
   const [justLoaded, setJustLoaded] = useState(false);
   const previousLoading = useRef(true);
   const queryClient = useQueryClient();
-  useRerouteIfUnauthorized(navigate);
+  useRerouteIfUnauthorized();
 
   const { addToCartIfLoggedIn } = useAddToCartIfLoggedIn(navigate);
   const { deleteFromCartIfLoggedIn } = useDeleteFromCartIfLoggedIn(navigate);

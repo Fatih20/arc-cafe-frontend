@@ -4,6 +4,8 @@ import { useQueryClient, useMutation } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 import { BASE_URL } from '../../routes';
 
+import useMe from '../../customHooks/useMe';
+
 import instagramLogo from '../../assets/instagram.png';
 import twitterLogo from '../../assets/twitter.png';
 import coffeeHour from '../../assets/coffeehour.png';
@@ -71,6 +73,7 @@ const LogoutButton = styled.button``;
 
 function Footer() {
   const queryClient = useQueryClient();
+  const { user, isLoading, error } = useMe();
   const navigate = useNavigate();
   const { mutateAsync: logoutAndRefetch } = useMutation(logout, {
     onSuccess: async () => {
