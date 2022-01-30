@@ -12,7 +12,7 @@ Be sure to grab our latest menu, the incredible matcha latte, on your next visit
 
 ## Founders
 
-Arsa Izdihar I.
-Fatih Nararya R. I.
-Ditra Amadia
-Haidar A
+- Arsa Izdihar I.
+- Fatih Nararya R. I.
+- Ditra Amadia
+- Haidar A
