@@ -1,11 +1,15 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { login, register } from '../utils/api';
 
 import coffeeHour from '../assets/coffeehour.png';
 
-import { BASE_URL } from '../utils/api';
+import { BASE_URL } from '../routes';
+import { useQueryClient } from 'react-query';
+import { IWarningWhenInvalidProps } from '../types';
+
+var approve = require('approvejs');
 
 const Main = styled.div`
   align-items: center;
@@ -83,18 +87,34 @@ const SignInLink = styled.a`
   color: #95c79d;
 `;
 
+const WarningWhenInvalid = styled.p<IWarningWhenInvalidProps>`
+  color: red;
+  display: ${({ valid }) => (valid ? 'none' : 'initial')};
+`;
+
 function LogIn() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
-  const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
+  const queryClient = useQueryClient();
+  const [emailOrPasswordInvalid, setEmailOrPasswordInvalid] = useState(false);
+
+  const handleSubmit: React.FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
-    login(email, password)
-      .then(() => navigate(`${BASE_URL}`))
-      .catch((err) => {
-        console.log(err);
-      });
+    try {
+      await login(email, password);
+      await queryClient.invalidateQueries();
+      window.scrollTo(0, 0);
+      navigate(`${BASE_URL}`);
+    } catch (error: any) {
+      console.log(error.response.data);
+      if (error.response.data.message === 'Invalid email or password') {
+        setEmailOrPasswordInvalid(true);
+        setPassword('');
+      }
+    }
   };
+
   return (
     <>
       <Spacer />
@@ -104,6 +124,9 @@ function LogIn() {
             <CoffeeLogo src={coffeeHour} />
             <Title>SIGN IN</Title>
           </TitleContainer>
+          <WarningWhenInvalid valid={!emailOrPasswordInvalid}>
+            Wrong Email or Password
+          </WarningWhenInvalid>
           <StyledForm onSubmit={handleSubmit}>
             <StyledInput
               type="email"

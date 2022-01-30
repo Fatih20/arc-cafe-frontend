@@ -1,7 +1,14 @@
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
+import { useRef, useState } from 'react';
+import useCart from '../customHooks/useCart';
+import { boughtItems } from '../types';
+import { boughtItemsArrayCreator } from '../utils/commonFunction';
+import useMe from '../customHooks/useMe';
 
 import { BASE_URL } from '../routes';
+import useRerouteIfUnauthorized from '../customHooks/useRerouteIfUnauthorized';
+import { clearCart } from '../utils/api';
 
 interface IGridBoxProps {
   column: string;
@@ -18,12 +25,6 @@ interface IEndToEndTextContainerProps {
 interface IRowContainer {
   isTotalPrice?: boolean;
 }
-
-type boughtItems = {
-  amount: number;
-  name: string;
-  price: number;
-};
 
 const Main = styled.div`
   align-items: center;
@@ -228,13 +229,23 @@ const ActualTotalPrice = styled.h2`
 
 export default function Checkout() {
   const navigate = useNavigate();
+  const { cart, isLoading: cartIsLoading } = useCart(navigate);
+  const { user, isLoading: userIsLoading, error } = useMe();
+  const [itemsSet, setItemsSet] = useState(new Set([] as string[]));
+  const [groupedItems, setGroupedItems] = useState({} as any);
+  const [orders, setOrders] = useState([] as boughtItems[]);
+  const [justLoaded, setJustLoaded] = useState(false);
+  const previousLoading = useRef(true);
+  useRerouteIfUnauthorized();
 
-  const orders: boughtItems[] = [
-    { name: 'Flat White', price: 23000, amount: 1 },
-  ];
+  function changeJustLoaded(isActuallyLoading: boolean) {
+    if (justLoaded === isActuallyLoading) {
+      setJustLoaded((prevJustLoaded) => !prevJustLoaded);
+    }
+  }
 
   const totalPrice = orders.reduce(
-    (previousSum, { price }) => previousSum + price,
+    (previousSum, { amount, price }) => previousSum + amount * price,
     0
   );
 
@@ -245,126 +256,164 @@ export default function Checkout() {
   const taxed = totalWithShipping * 0.1;
   const totalWithTax = totalWithShipping + taxed;
 
-  function processCheckout() {
+  async function processCheckout() {
+    await clearCart();
     navigate(`${BASE_URL}/checked`);
   }
 
   function periodInserted(unPeriodedPrice: number) {
     const stringifiedPrice = unPeriodedPrice.toFixed(0);
     if (stringifiedPrice.length > 3) {
-      return (
-        stringifiedPrice.slice(0, stringifiedPrice.length - 3) +
-        '.' +
-        stringifiedPrice.slice(
-          stringifiedPrice.length - 3,
-          stringifiedPrice.length
-        )
-      );
+      let nthDigit = 0;
+      let lengthBackward = stringifiedPrice.length - 1;
+      let convertedPrice: string[] = [];
+      stringifiedPrice.split('').forEach(() => {
+        convertedPrice.push(stringifiedPrice[lengthBackward]);
+        nthDigit = nthDigit + 1;
+        if (nthDigit === 3) {
+          if (lengthBackward !== 0) {
+            nthDigit = 0;
+            convertedPrice.push('.');
+          }
+        }
+        lengthBackward = lengthBackward - 1;
+      });
+
+      convertedPrice.reverse();
+
+      return convertedPrice.join('');
     } else {
       return stringifiedPrice;
     }
   }
 
-  return (
-    <Main>
-      <Title>MY BASKET</Title>
-      <TotalsContainer>
-        <GridContainer isBill={true} column="1/2" row="1/4">
-          <BillTitleContainer>
-            <BillTitle>COFFEE HOUR</BillTitle>
+  if (cartIsLoading || userIsLoading) {
+    previousLoading.current = true;
+    changeJustLoaded(true);
+    return (
+      <Main>
+        <Title>MY BASKET</Title>
+        <Spacer />
+      </Main>
+    );
+  } else {
+    console.log(user);
+    changeJustLoaded(false);
+    if (justLoaded !== previousLoading.current) {
+      previousLoading.current = true;
+      setOrders(boughtItemsArrayCreator(cart));
+    }
+    return (
+      <Main>
+        <Title>MY BASKET</Title>
+        <TotalsContainer>
+          <GridContainer isBill={true} column="1/2" row="1/4">
+            <BillTitleContainer>
+              <BillTitle>COFFEE HOUR</BillTitle>
+              <FormattedShortText>
+                Jl. Braga No. 21, Kota Bandung
+              </FormattedShortText>
+            </BillTitleContainer>
+            <EndToEndTextContainer>
+              <FormattedShortText>No. Orders</FormattedShortText>
+              <Spacer />
+              <FormattedShortText>Time</FormattedShortText>
+            </EndToEndTextContainer>
+            <EndToEndTextContainer>
+              <FormattedShortText>Bar</FormattedShortText>
+              <Spacer />
+              <FormattedShortText>
+                {user ? user.name.split(' ')[0] : null}
+              </FormattedShortText>
+            </EndToEndTextContainer>
+            <CoreBill>
+              {orders.map(({ name, price, amount }) => {
+                return (
+                  <RowContainer>
+                    <ItemsBoughtName>
+                      {amount}x {name}
+                    </ItemsBoughtName>
+                    <ItemsBoughtPrice>
+                      @ {periodInserted(price)}
+                    </ItemsBoughtPrice>
+                    <Currency>IDR</Currency>
+                    <TotalPrice>{periodInserted(amount * price)}</TotalPrice>
+                  </RowContainer>
+                );
+              })}
+              <RowContainer>
+                <Dashes>- - - - - - - - - -</Dashes>
+              </RowContainer>
+              <RowContainer>
+                <PriceType>Subtotal</PriceType>
+                <CurrencyInLatter>IDR</CurrencyInLatter>
+                <Prices>{periodInserted(totalPrice)}</Prices>
+              </RowContainer>
+              <RowContainer>
+                <PriceType>Shipping</PriceType>
+                <CurrencyInLatter>IDR</CurrencyInLatter>
+                <Prices>{periodInserted(shipping)}</Prices>
+              </RowContainer>
+              <RowContainer>
+                <PriceType>Tax</PriceType>
+                <CurrencyInLatter>IDR</CurrencyInLatter>
+                <Prices>{periodInserted(taxed)}</Prices>
+              </RowContainer>
+              <RowContainer>
+                <Dashes>- - - - - - - - - -</Dashes>
+              </RowContainer>
+              <RowContainer isTotalPrice={true}>
+                <TotalText>TOTAL</TotalText>
+                <ActualTotalPrice>
+                  {periodInserted(totalWithTax)}
+                </ActualTotalPrice>
+              </RowContainer>
+            </CoreBill>
+            <Spacer />
+            <FormattedShortText>022 88885478</FormattedShortText>
+            <FormattedShortText>coffeehour@cafe.co.id</FormattedShortText>
+          </GridContainer>
+          <GridContainer isProfile={true} column="2/3" row="1/2">
+            <Name>{user ? user.name : null}</Name>
+            <FormattedShortText>{user ? user.email : null}</FormattedShortText>
+            <FormattedShortText>082320881088</FormattedShortText>
             <FormattedShortText>
-              Jl. Braga No. 21, Kota Bandung
+              Jl. Setra Dago No.27 Arcamanik
             </FormattedShortText>
-          </BillTitleContainer>
-          <EndToEndTextContainer>
-            <FormattedShortText>No. Orders</FormattedShortText>
             <Spacer />
-            <FormattedShortText>Time</FormattedShortText>
-          </EndToEndTextContainer>
-          <EndToEndTextContainer>
-            <FormattedShortText>Bar</FormattedShortText>
-            <Spacer />
-            <FormattedShortText>Ditra</FormattedShortText>
-          </EndToEndTextContainer>
-          <CoreBill>
-            {orders.map(({ name, price, amount }) => {
-              return (
-                <RowContainer>
-                  <ItemsBoughtName>
-                    {amount}x {name}
-                  </ItemsBoughtName>
-                  <ItemsBoughtPrice>@ {periodInserted(price)}</ItemsBoughtPrice>
-                  <Currency>IDR</Currency>
-                  <TotalPrice>{periodInserted(amount * price)}</TotalPrice>
-                </RowContainer>
-              );
-            })}
-            <RowContainer>
-              <Dashes>- - - - - - - - - -</Dashes>
-            </RowContainer>
-            <RowContainer>
-              <PriceType>Subtotal</PriceType>
-              <CurrencyInLatter>IDR</CurrencyInLatter>
-              <Prices>{periodInserted(totalPrice)}</Prices>
-            </RowContainer>
-            <RowContainer>
-              <PriceType>Shipping</PriceType>
-              <CurrencyInLatter>IDR</CurrencyInLatter>
-              <Prices>{periodInserted(shipping)}</Prices>
-            </RowContainer>
-            <RowContainer>
-              <PriceType>Tax</PriceType>
-              <CurrencyInLatter>IDR</CurrencyInLatter>
-              <Prices>{periodInserted(taxed)}</Prices>
-            </RowContainer>
-            <RowContainer>
-              <Dashes>- - - - - - - - - -</Dashes>
-            </RowContainer>
-            <RowContainer isTotalPrice={true}>
-              <TotalText>TOTAL</TotalText>
-              <ActualTotalPrice>
+            <FormattedShortText>member since 2022</FormattedShortText>
+          </GridContainer>
+          <GridContainer isPrice={true} column="2/3" row="2/3">
+            <EndToEndTextContainer>
+              <FormattedShortText>Subtotal</FormattedShortText>
+              <Spacer />
+              <FormattedShortText>
+                {periodInserted(totalPrice)}
+              </FormattedShortText>
+            </EndToEndTextContainer>
+            <EndToEndTextContainer>
+              <FormattedShortText>Shipping</FormattedShortText>
+              <Spacer />
+              <FormattedShortText>
+                {periodInserted(shipping)}
+              </FormattedShortText>
+            </EndToEndTextContainer>
+            <EndToEndTextContainer>
+              <FormattedShortText>Tax</FormattedShortText>
+              <Spacer />
+              <FormattedShortText>{periodInserted(taxed)}</FormattedShortText>
+            </EndToEndTextContainer>
+            <EndToEndTextContainer isTotal={true}>
+              <FormattedShortText>Total</FormattedShortText>
+              <Spacer />
+              <FormattedShortText>
                 {periodInserted(totalWithTax)}
-              </ActualTotalPrice>
-            </RowContainer>
-          </CoreBill>
-          <Spacer />
-          <FormattedShortText>022 88885478</FormattedShortText>
-          <FormattedShortText>coffeehour@cafe.co.id</FormattedShortText>
-        </GridContainer>
-        <GridContainer isProfile={true} column="2/3" row="1/2">
-          <Name>DITRA AMADIA</Name>
-          <FormattedShortText>ditraamadia@gmail.com</FormattedShortText>
-          <FormattedShortText>082320881088</FormattedShortText>
-          <FormattedShortText>
-            Jl. Setra Dago No.27 Arcamanik
-          </FormattedShortText>
-          <Spacer />
-          <FormattedShortText>member since 2022</FormattedShortText>
-        </GridContainer>
-        <GridContainer isPrice={true} column="2/3" row="2/3">
-          <EndToEndTextContainer>
-            <FormattedShortText>Subtotal</FormattedShortText>
-            <Spacer />
-            <FormattedShortText>Amount</FormattedShortText>
-          </EndToEndTextContainer>
-          <EndToEndTextContainer>
-            <FormattedShortText>Shipping</FormattedShortText>
-            <Spacer />
-            <FormattedShortText>Amount</FormattedShortText>
-          </EndToEndTextContainer>
-          <EndToEndTextContainer>
-            <FormattedShortText>Tax</FormattedShortText>
-            <Spacer />
-            <FormattedShortText>Amount</FormattedShortText>
-          </EndToEndTextContainer>
-          <EndToEndTextContainer isTotal={true}>
-            <FormattedShortText>Total</FormattedShortText>
-            <Spacer />
-            <FormattedShortText>Amount</FormattedShortText>
-          </EndToEndTextContainer>
-          <BackButton onClick={processCheckout}>CHECKOUT</BackButton>
-        </GridContainer>
-      </TotalsContainer>
-    </Main>
-  );
+              </FormattedShortText>
+            </EndToEndTextContainer>
+            <BackButton onClick={processCheckout}>CHECKOUT</BackButton>
+          </GridContainer>
+        </TotalsContainer>
+      </Main>
+    );
+  }
 }

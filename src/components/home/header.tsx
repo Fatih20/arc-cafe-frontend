@@ -1,7 +1,5 @@
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
-import { logout } from '../../utils/api';
-import { useQueryClient, useMutation } from 'react-query';
 import { useIsLoggedIn } from '../../context/isLoggedIn';
 
 import blackLogo from '../../assets/coffeehour_black.png';
@@ -42,17 +40,8 @@ const NavigationButton = styled.a`
 `;
 
 function Header() {
-  const queryClient = useQueryClient();
   const isLoggedIn = useIsLoggedIn();
   const navigate = useNavigate();
-
-  const { mutateAsync: logoutAndRefetch } = useMutation(logout, {
-    onSuccess: () => queryClient.invalidateQueries('me'),
-  });
-
-  async function handleLogout() {
-    logoutAndRefetch();
-  }
 
   function navigateToHome() {
     navigate(`${BASE_URL}/`);
@@ -78,11 +67,7 @@ function Header() {
           MENU
         </NavigationButton>
       </Navigation>
-      <LogoButton
-        onClick={
-          isLoggedIn ? navigateToMenu : () => navigate(`${BASE_URL}/signup`)
-        }
-      >
+      <LogoButton onClick={() => navigate(`${BASE_URL}/basket/`)}>
         <HeaderLogo src={cartLogo} />
       </LogoButton>
     </Main>

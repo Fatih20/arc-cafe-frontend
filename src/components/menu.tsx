@@ -1,7 +1,11 @@
 import styled from 'styled-components';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import Footer from './home/footer';
+
+import { getItemsInCart } from '../utils/api';
+
+import { useQueryClient, useMutation, QueryClient } from 'react-query';
 
 import logo from '../assets/coffeehour.png';
 import flatWhite from '../assets/flat-white.png';
@@ -11,21 +15,20 @@ import fries from '../assets/fries.png';
 import macaron from '../assets/macaron.png';
 import { useNavigate } from 'react-router-dom';
 import { BASE_URL } from '../routes';
+import useMenu from '../customHooks/useMenu';
+import { addToCart } from '../utils/api';
+import useAddToCartIfLoggedIn from '../utils/addToCartIfLoggedIn';
+import useCart from '../customHooks/useCart';
 
-type whatCanBeShown = 'all' | 'food' | 'coffee';
+type whatCanBeShown = 'ALL' | 'FOOD' | 'DRINK';
 
-type compositionOfMenu = {
-  name: string;
-  percentage: number;
-};
+interface ICoreMenuProps {
+  whatIsShown: whatCanBeShown;
+}
 
-type menuItems = {
-  type: 'food' | 'coffee';
-  name: string;
-  composition?: compositionOfMenu[];
-  price: number;
-  imageId: number;
-};
+interface IBasketCounterProps { 
+  display : boolean;
+}
 
 const images = [espresso, cappuccino, flatWhite, fries, macaron];
 
@@ -98,14 +101,14 @@ const Spacer = styled.div`
   flex-grow: 1;
 `;
 
-const BasketCounter = styled.div`
+const BasketCounter = styled.div<IBasketCounterProps>`
   align-items: center;
   aspect-ratio: 1/1;
   background-color: #f27070;
   border-radius: 50%;
   box-sizing: border-box;
   color: white;
-  display: flex;
+  display: ${({display}) => display ? "flex" : "none"};
   height: auto;
   justify-content: center;
   width: 1rem;
@@ -271,121 +274,120 @@ const EndToEndTextContainer = styled.div`
   width: 100%;
 `;
 
-function Menu() {
-  const [whatIsShown, setWhatIsShown] = useState('all' as whatCanBeShown);
+function CoreMenu(props: ICoreMenuProps) {
+  const queryClient = useQueryClient();
+  const { whatIsShown } = props;
+  const { menu, isLoading } = useMenu();
   const navigate = useNavigate();
+  const { addToCartIfLoggedIn } = useAddToCartIfLoggedIn(navigate);
+
+  const { mutateAsync: addToBasketAndUpdateCart } = useMutation(
+    addToCartIfLoggedIn,
+    {
+      onSuccess: () => queryClient.invalidateQueries('cart'),
+    }
+  );
 
   function priceMaker(price: number) {
     return (
       <MenuItemPrice>
         <h2>Rp</h2>
-        <h2>{price}</h2>
+        <h2>
+          {typeof (price / 1000) === 'number'
+            ? price / 1000
+            : (price / 1000).toFixed(1)}
+        </h2>
         <h2>k</h2>
       </MenuItemPrice>
     );
   }
 
-  const menuContent: menuItems[] = [
-    {
-      name: 'Espresso',
-      type: 'coffee',
-      composition: [
-        {
-          name: 'Espresso',
-          percentage: 20,
-        },
-      ],
-      price: 23,
-      imageId: 0,
-    },
-    {
-      name: 'Espresso',
-      type: 'coffee',
-      composition: [
-        {
-          name: 'Espresso',
-          percentage: 20,
-        },
-      ],
-      price: 23,
-      imageId: 0,
-    },
-    {
-      name: 'Espresso',
-      type: 'coffee',
-      composition: [
-        {
-          name: 'Espresso',
-          percentage: 20,
-        },
-      ],
-      price: 23,
-      imageId: 0,
-    },
-    {
-      name: 'Espresso',
-      type: 'coffee',
-      composition: [
-        {
-          name: 'Espresso',
-          percentage: 20,
-        },
-      ],
-      price: 23,
-      imageId: 0,
-    },
-    {
-      name: 'Espresso',
-      type: 'coffee',
-      composition: [
-        {
-          name: 'Espresso',
-          percentage: 20,
-        },
-      ],
-      price: 23,
-      imageId: 0,
-    },
-    {
-      name: 'Espresso',
-      type: 'coffee',
-      composition: [
-        {
-          name: 'Espresso',
-          percentage: 20,
-        },
-      ],
-      price: 23,
-      imageId: 0,
-    },
-  ];
+  function compositionToArrayConverter(composition: object) {
+    return Object.entries(composition).map(([composerName, amount]) => {
+      return {
+        name: composerName,
+        amount: amount,
+      };
+    });
+  }
 
-  const shownMenuContent = menuContent.filter((menuItem) => {
-    if (whatIsShown === 'all') {
-      return true;
-    } else {
-      return menuItem.type === whatIsShown;
-    }
-  });
+  if (isLoading) {
+    return <></>;
+  } else {
+    console.log(menu);
+    const shownMenuContent = menu.filter((menuItem) => {
+      if (whatIsShown === 'ALL') {
+        return true;
+      } else {
+        return menuItem.type === whatIsShown;
+      }
+    });
+    return (
+      <ActualMenu>
+        {shownMenuContent.map((menuItem) => {
+          return (
+            <MenuItemCard>
+              <MenuItemImage src={menuItem.photoUrl} />
+              <MenuItemTitle>{menuItem.name}</MenuItemTitle>
+              <CompositionContainer>
+                {menuItem.composition === undefined
+                  ? null
+                  : compositionToArrayConverter(menuItem.composition).map(
+                      (menuItemComposition) => {
+                        return (
+                          <EndToEndTextContainer>
+                            <p>{menuItemComposition.name}</p>
+                            <Spacer />
+                            <p>{menuItemComposition.amount}</p>
+                          </EndToEndTextContainer>
+                        );
+                      }
+                    )}
+              </CompositionContainer>
+              <Spacer />
+              {priceMaker(menuItem.price)}
+              <AddToBasketButton
+                onClick={async () =>{
+                  await addToBasketAndUpdateCart(menuItem.id);
+                  console.log("Cart should've been revalidated")
+                }}
+              >
+                ADD TO BASKET
+              </AddToBasketButton>
+            </MenuItemCard>
+          );
+        })}
+      </ActualMenu>
+    );
+  }
+}
 
-  console.log(window.innerWidth);
+function Menu() {
+  const [whatIsShown, setWhatIsShown] = useState('ALL' as whatCanBeShown);
+  const navigate = useNavigate();
+  const { cart, isLoading } = useCart(navigate);
+
+  function navigateToHome() {
+    navigate(`${BASE_URL}/`);
+  }
+
   return (
     <Main>
       <Header>
         <HeaderLogo src={logo} onClick={() => navigate(`${BASE_URL}/`)} />
-        <NavigationButton onClick={() => setWhatIsShown('all')}>
+        <NavigationButton onClick={() => setWhatIsShown('ALL')}>
           ALL
         </NavigationButton>
-        <NavigationButton onClick={() => setWhatIsShown('food')}>
+        <NavigationButton onClick={() => setWhatIsShown('FOOD')}>
           FOOD
         </NavigationButton>
-        <NavigationButton onClick={() => setWhatIsShown('coffee')}>
+        <NavigationButton onClick={() => setWhatIsShown('DRINK')}>
           COFFEE
         </NavigationButton>
         <Spacer />
-        <NavigationButton>
-          <BasketCounter>
-            <p>1</p>
+        <NavigationButton onClick={() => navigate(`${BASE_URL}/basket`)}>
+          <BasketCounter display={isLoading || cart.length === 0 ? false : true}>
+            <p>{isLoading ? null : cart.length}</p>
           </BasketCounter>
           MY BASKET
         </NavigationButton>
@@ -394,33 +396,7 @@ function Menu() {
         <Title>COFFEE IS</Title>
         <Title>A HUG IN A MUG</Title>
       </TitleContainer>
-      <ActualMenu>
-        {shownMenuContent.map((menuItem) => {
-          return (
-            <MenuItemCard>
-              <MenuItemImage src={images[menuItem.imageId]} />
-              <MenuItemTitle>{menuItem.name}</MenuItemTitle>
-              <CompositionContainer>
-                {menuItem.composition === undefined
-                  ? null
-                  : menuItem.composition.map((menuItemComposition) => {
-                      return (
-                        <EndToEndTextContainer>
-                          <p>{menuItemComposition.name}</p>
-                          <Spacer />
-                          <p>{menuItemComposition.percentage}%</p>
-                        </EndToEndTextContainer>
-                      );
-                    })}
-              </CompositionContainer>
-              <Spacer />
-              {priceMaker(menuItem.price)}
-              <AddToBasketButton>ADD TO BASKET</AddToBasketButton>
-            </MenuItemCard>
-          );
-        })}
-      </ActualMenu>
-
+      <CoreMenu whatIsShown={whatIsShown} />
       <Footer />
     </Main>
   );

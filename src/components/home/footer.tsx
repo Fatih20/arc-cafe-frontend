@@ -1,8 +1,18 @@
 import styled from 'styled-components';
+import { logout } from '../../utils/api';
+import { useQueryClient, useMutation } from 'react-query';
+import { useNavigate } from 'react-router-dom';
+import { BASE_URL } from '../../routes';
+
+import useMe from '../../customHooks/useMe';
 
 import instagramLogo from '../../assets/instagram.png';
 import twitterLogo from '../../assets/twitter.png';
 import coffeeHour from '../../assets/coffeehour.png';
+
+interface ISignOutButton {
+  show: boolean;
+}
 
 const Main = styled.div`
   align-items: center;
@@ -63,7 +73,20 @@ const BottomCopyright = styled.p`
   font-size: 0.7rem;
 `;
 
+const LogoutButton = styled.button<ISignOutButton>`
+  display: ${({ show }) => (show ? 'initial' : 'none')};
+`;
+
 function Footer() {
+  const queryClient = useQueryClient();
+  const { user, isLoading, error } = useMe();
+  const navigate = useNavigate();
+  const { mutateAsync: logoutAndRefetch } = useMutation(logout, {
+    onSuccess: async () => {
+      await queryClient.invalidateQueries();
+    },
+  });
+
   return (
     <Main>
       <MostWrapper>
@@ -92,6 +115,17 @@ function Footer() {
         </SectionContainer>
       </MostWrapper>
       <BottomCopyright>&copy; 2022 | COFFEEHOUR</BottomCopyright>
+      <LogoutButton
+        show={error === null ? true : false}
+        onClick={async () => {
+          await logoutAndRefetch();
+          window.scrollTo(0, 0);
+          navigate(`${BASE_URL}`);
+          // console.log("Should've been invalidated");
+        }}
+      >
+        Sign Out
+      </LogoutButton>
     </Main>
   );
 }

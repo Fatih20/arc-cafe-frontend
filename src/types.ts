@@ -4,6 +4,34 @@ export interface IUser {
     id: string;
 }
 
-export type noParamReturnVoid = () => void;
+export interface ICartItem {
+    id : string,
+    customerId : string,
+    createdAt : string,
+    menuId : string,
+    orderId : string | null,
+    menu : IMenu
+}
 
-export type stateOfPage = "main" | "menu" | "login" | "signup";
+export interface IMenu {
+    id : string,
+    name : string,
+    photoUrl : string,
+    price : number,
+    type : "DRINK" | "FOOD",
+    composition : object
+}
+
+export type menuItemIdentity = "name" | "id" | "price";
+
+export type boughtItems = {
+    amount: number;
+    name: string;
+    price: number;
+  };
+
+export interface IWarningWhenInvalidProps {
+    valid: boolean;
+  }
+  
+  

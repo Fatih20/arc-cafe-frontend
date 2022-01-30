@@ -13,7 +13,9 @@ export default function IsLoggedInProvider({
   children: JSX.Element[] | JSX.Element;
 }) {
   const { user, error, isLoading } = useMe();
-  const isLoggedIn = !isLoading && error !== null ? true : false;
+  console.log(isLoading);
+  console.log(error);
+  const isLoggedIn = !isLoading && error === null ? true : false;
   return (
     <IsLoggedInContext.Provider value={isLoggedIn}></IsLoggedInContext.Provider>
   );
